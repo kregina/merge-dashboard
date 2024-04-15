@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 
 // Import the generated route tree
+import { ThemeProvider, TooltipProvider } from './components';
 import { routeTree } from './routeTree.gen';
 
 const queryClient = new QueryClient();
@@ -30,7 +31,14 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <ThemeProvider
+        defaultTheme="system"
+        storageKey="merge-dashboard-ui-theme"
+      >
+        <TooltipProvider>
+          <RouterProvider router={router} />
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>,
   );
 }

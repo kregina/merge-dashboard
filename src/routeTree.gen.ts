@@ -11,25 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LayoutImport } from './routes/_layout'
+import { Route as BoardImport } from './routes/board'
 import { Route as IndexImport } from './routes/index'
-import { Route as LayoutBoardImport } from './routes/_layout.board'
 
 // Create/Update Routes
 
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
+const BoardRoute = BoardImport.update({
+  path: '/board',
   getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const LayoutBoardRoute = LayoutBoardImport.update({
-  path: '/board',
-  getParentRoute: () => LayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -40,22 +34,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/_layout': {
-      preLoaderRoute: typeof LayoutImport
+    '/board': {
+      preLoaderRoute: typeof BoardImport
       parentRoute: typeof rootRoute
-    }
-    '/_layout/board': {
-      preLoaderRoute: typeof LayoutBoardImport
-      parentRoute: typeof LayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([
-  IndexRoute,
-  LayoutRoute.addChildren([LayoutBoardRoute]),
-])
+export const routeTree = rootRoute.addChildren([IndexRoute, BoardRoute])
 
 /* prettier-ignore-end */
