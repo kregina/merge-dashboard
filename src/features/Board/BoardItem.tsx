@@ -58,7 +58,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
         onDrop={() => onHandleOnDrop(index)}
         className={cn(
           defaultClassName,
-          'bg-zinc-600',
+          'bg-slate-300 dark:bg-slate-950',
           `${hoveredId === index ? 'bg-orange-500 dark:bg-orange-700' : ''}`,
         )}
       >
@@ -88,7 +88,9 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
       }}
     >
       <div className="flex flex-col p-2 relative">
-        <Badge className="bg-teal-300 absolute right-2">{item.itemLevel}</Badge>
+        <Badge className="bg-teal-600 dark:bg-teal-300 absolute right-2">
+          {item.itemLevel}
+        </Badge>
 
         <img
           className="m-auto mt-2"
