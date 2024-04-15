@@ -1,6 +1,8 @@
+import { Button } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services/board';
 import { motion } from 'framer-motion';
+import { PlusSquare } from 'lucide-react';
 import { FC } from 'react';
 
 interface BoardItemProps {
@@ -27,10 +29,27 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     setActiveChainId(chainId);
   };
 
+  if (!item?.itemType) {
+    return (
+      <motion.div
+        layout
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+        onDrop={() => handleDrop(index)}
+        className="py-2 rounded opacity-40"
+      >
+        <Button variant="ghost">
+          <PlusSquare size={24} />
+        </Button>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
-      draggable={!!item?.itemType}
-      layout={!!item?.itemType}
+      draggable
+      layout
       onDragStart={() => handleDragStart(index, item?.chainId || null)}
       onDragOver={(e) => {
         e.preventDefault();
@@ -40,7 +59,6 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
       className={cn(
         'p-4 rounded cursor-grab',
         'bg-orange-300 dark:bg-orange-900',
-        `${item?.itemType ? 'cursor-grab' : 'opacity-40'}`,
         `${activeChainId === item?.chainId ? 'bg-emerald-600 dark:bg-emerald-800' : ''}`,
       )}
       whileTap={{
@@ -48,7 +66,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
         boxShadow: '0px 5px 5px rgba(0,0,0,0.1)',
       }}
     >
-      <p className="truncate">{item?.itemType}</p>
+      <p className="">{item?.itemType}</p>
     </motion.div>
   );
 };
