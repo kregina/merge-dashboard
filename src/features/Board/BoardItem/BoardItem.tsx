@@ -1,9 +1,10 @@
-import { Badge, Button } from '@/components';
+import { Badge } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services/board';
 import { motion } from 'framer-motion';
-import { PlusSquare } from 'lucide-react';
-import { FC, useState } from 'react';
+import { FC } from 'react';
+import { BoardItemAdd } from './BoardItemAdd';
+import { useBoardItem } from './useBoardItem';
 
 interface BoardItemProps {
   item: Item | null;
@@ -24,48 +25,31 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     handleDrop,
   } = props;
 
-  const [hoveredId, setHoveredId] = useState<string | number | null>(null);
-
-  const defaultClassName = `rounded-lg cursor-grab bg-background
-  transition-colors duration-100 ease-in-out
-  border
-  `;
-
-  const handleOnDragStart = (index: number, chainId: string | null) => {
-    setDragStartIndex(index);
-    setActiveChainId(chainId);
-  };
-
-  const onHandleOnDrop = (index: number) => {
-    handleDrop(index);
-    setHoveredId(null);
-  };
-
-  const handleOnDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    chainId: string | null,
-    index: number | null = null,
-  ) => {
-    e.preventDefault();
-    setHoveredId(chainId || index);
-  };
+  const {
+    hoveredId,
+    handleOnDragOver,
+    handleOnDragLeave,
+    onHandleOnDrop,
+    defaultClassName,
+    handleOnDragStart,
+  } = useBoardItem({
+    chainId: item?.chainId || null,
+    setDragStartIndex,
+    setActiveChainId,
+    handleDrop,
+    index,
+  });
 
   if (!item?.itemType) {
     return (
-      <motion.div
-        layout
-        onDragOver={(e) => handleOnDragOver(e, null, index)}
-        onDrop={() => onHandleOnDrop(index)}
-        className={cn(
-          defaultClassName,
-          'bg-slate-300 dark:bg-slate-950',
-          `${hoveredId === index ? 'bg-orange-500 dark:bg-orange-700' : ''}`,
-        )}
-      >
-        <Button variant="ghost">
-          <PlusSquare size={24} />
-        </Button>
-      </motion.div>
+      <BoardItemAdd
+        index={index}
+        hoveredId={hoveredId}
+        handleOnDragOver={handleOnDragOver}
+        handleOnDragLeave={handleOnDragLeave}
+        onHandleOnDrop={onHandleOnDrop}
+        defaultClassName={defaultClassName}
+      />
     );
   }
 
@@ -73,10 +57,10 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     <motion.div
       draggable
       layout
-      onDragStart={() => handleOnDragStart(index, item.chainId)}
+      onDragStart={handleOnDragStart}
       onDragOver={(e) => handleOnDragOver(e, item.chainId)}
-      onDragLeave={() => setHoveredId(null)}
-      onDrop={() => onHandleOnDrop(index)}
+      onDragLeave={handleOnDragLeave}
+      onDrop={onHandleOnDrop}
       className={cn(
         defaultClassName,
         `${activeChainId === item.chainId ? 'bg-emerald-600 dark:bg-emerald-800' : ''}`,
@@ -85,6 +69,10 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
       whileTap={{
         scale: 1.12,
         boxShadow: '0px 5px 5px rgba(0,0,0,0.1)',
+      }}
+      whileHover={{
+        scale: 1.12,
+        boxShadow: '0px 5px 5px rgba(249,115,22,0.1)',
       }}
     >
       <div className="flex flex-col p-2 relative">

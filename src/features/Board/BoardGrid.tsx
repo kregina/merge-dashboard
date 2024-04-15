@@ -2,7 +2,7 @@ import { Card } from '@/components';
 import { swapArrayItems } from '@/lib/swapArrayItems';
 import { Board } from '@/services/board';
 import { FC, useState } from 'react';
-import { BoardItem } from './BoardItem';
+import { BoardItem } from './BoardItem/BoardItem';
 
 interface BoardGridProps {
   board: Board;
