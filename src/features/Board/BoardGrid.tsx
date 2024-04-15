@@ -27,7 +27,7 @@ export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
     <div className="max-w-[1000px]">
       <Card>
         <div
-          className="grid gap-0.5"
+          className="grid"
           style={{
             gridTemplateColumns: `repeat(${board.width}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${board.height}, minmax(0, 1fr))`,

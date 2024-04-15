@@ -14,7 +14,7 @@ export interface Item {
   visibility: ItemVisibility | string | null;
   itemLevel: number | null;
   isInsideBubble: boolean;
-  draggable?: boolean | undefined;
+  icon: string;
 }
 
 export interface Board {
