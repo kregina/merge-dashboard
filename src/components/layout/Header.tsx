@@ -1,4 +1,10 @@
-import { Button, Sheet, SheetContent, SheetTrigger } from '@/components';
+import {
+  Button,
+  ModeToggle,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/components';
 import { Link } from '@tanstack/react-router';
 import { DoorOpen, Gamepad2, Grid3X3, PanelLeft } from 'lucide-react';
 export const Header = () => {
@@ -41,7 +47,7 @@ export const Header = () => {
       </Sheet>
       <div>Board - User #123</div>
       <div className="relative ml-auto flex-1 md:grow-0">
-        {/* <ModeToggle /> */}
+        <ModeToggle />
       </div>
       <img
         src="https://robohash.org/cat?set=set4"
