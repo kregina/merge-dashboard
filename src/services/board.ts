@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export enum ItemVisibility {
   VISIBLE = 'visible',
   HIDDEN = 'hidden',
@@ -26,5 +28,9 @@ export const fetchBoard = async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const json = await import('./data/assigment.json');
 
-  return json as Board;
+  const data = {
+    ...json,
+    items: json.items.map((item: any) => ({ ...item, itemId: uuidv4() })),
+  };
+  return data;
 };
