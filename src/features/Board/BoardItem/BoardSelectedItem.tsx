@@ -9,7 +9,7 @@ interface BoardSelectedItemProps {
 }
 export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({ item }) => {
   return (
-    <div className="h-full w-full flex flex-col relative z-[60]">
+    <div className="h-full w-[80%] flex flex-col relative z-[60]">
       <motion.div
         initial={{
           opacity: 0,

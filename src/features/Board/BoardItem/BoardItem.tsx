@@ -1,8 +1,8 @@
 import { Badge, Button } from '@/components';
 import { cn } from '@/lib/utils';
-import { Item } from '@/services/board';
+import { Item, ItemVisibility } from '@/services/board';
 import { motion } from 'framer-motion';
-import { PlusSquare } from 'lucide-react';
+import { Eye, EyeOff, PlusSquare } from 'lucide-react';
 import { FC } from 'react';
 import { BoardSelectedItem } from './BoardSelectedItem';
 import { useBoardItem } from './useBoardItem';
@@ -57,15 +57,15 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     isActive ? 'bg-emerald-600 dark:bg-emerald-800' : '',
     isHovered ? 'bg-orange-500 dark:bg-orange-700' : '',
     isSelected
-      ? `rounded-lg cursor-default absolute inset-0 h-1/2 w-full 
-        md:w-1/2 m-auto z-50 flex justify-center items-center flex-wrap flex-col`
+      ? `rounded-lg cursor-default absolute inset-0 h-[30%] w-full 
+        md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col`
       : isLastSelected
         ? 'z-40 rounded-xl h-full w-full'
         : 'rounded-xl h-full w-full',
   );
 
   return (
-    <div className="col-span-1">
+    <div className="col-span-1 p-1">
       <motion.div
         draggable={!!item?.itemType}
         layout
@@ -77,21 +77,41 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
         className={itemClasses}
       >
         {item?.icon ? (
-          <div className="flex flex-col p-2">
-            <div className="m-auto mt-2 bg-background relative">
-              <Badge className="bg-teal-600 dark:bg-teal-300 absolute -right-4 -top-2">
-                {item?.itemLevel}
-              </Badge>
+          <div
+            className={cn(
+              'flex flex-col  p-2',
+              `${!isSelected ? 'h-full justify-between' : 'lg:pl-8'}`,
+            )}
+          >
+            <div className="relative">
+              {!isSelected && (
+                <div className="absolute flex flex-col gap-1 right-0 items-center w-auto">
+                  <Badge className="bg-teal-600 dark:bg-teal-300 size-4 p-0 justify-center">
+                    {item?.itemLevel}
+                  </Badge>
+                  <span className="text-orange-500">
+                    {item.visibility === ItemVisibility.VISIBLE ? (
+                      <Eye />
+                    ) : (
+                      <EyeOff />
+                    )}
+                  </span>
+                </div>
+              )}
+
               <img
-                width={36}
-                className="mx-4"
+                width={`${isSelected ? '64' : '36'}`}
+                className="m-auto"
                 src={`src/assets/images/board-icons/${item?.icon}`}
                 alt={`${item?.chainId} Icon`}
               />
             </div>
-            <small className="inline-block truncate text-center">
-              {item?.chainId}
-            </small>
+
+            {!isSelected && (
+              <small className="inline-block truncate text-center max-w-[7rem]">
+                {item?.chainId}
+              </small>
+            )}
           </div>
         ) : (
           <Button
