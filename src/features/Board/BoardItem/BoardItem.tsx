@@ -1,9 +1,10 @@
-import { Badge } from '@/components';
+import { Badge, Button } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services/board';
 import { motion } from 'framer-motion';
+import { PlusSquare } from 'lucide-react';
 import { FC } from 'react';
-import { BoardItemAdd } from './BoardItemAdd';
+import { BoardSelectedItem } from './BoardSelectedItem';
 import { useBoardItem } from './useBoardItem';
 
 interface BoardItemProps {
@@ -13,6 +14,9 @@ interface BoardItemProps {
   setDragStartIndex: (index: number) => void;
   setActiveChainId: (chainId: string | null) => void;
   handleDrop: (dropIndex: number) => void;
+  handleClick: (card: Item) => void;
+  selected: Item | null;
+  lastSelected: Item | null;
 }
 
 export const BoardItem: FC<BoardItemProps> = (props) => {
@@ -23,6 +27,9 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     setActiveChainId,
     setDragStartIndex,
     handleDrop,
+    handleClick,
+    selected,
+    lastSelected,
   } = props;
 
   const {
@@ -30,7 +37,6 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     handleOnDragOver,
     handleOnDragLeave,
     onHandleOnDrop,
-    defaultClassName,
     handleOnDragStart,
   } = useBoardItem({
     chainId: item?.chainId || null,
@@ -40,56 +46,63 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     index,
   });
 
-  if (!item?.itemType) {
-    return (
-      <BoardItemAdd
-        index={index}
-        hoveredId={hoveredId}
-        handleOnDragOver={handleOnDragOver}
-        handleOnDragLeave={handleOnDragLeave}
-        onHandleOnDrop={onHandleOnDrop}
-        defaultClassName={defaultClassName}
-      />
-    );
-  }
+  // Class management
+  const isActive = activeChainId === item?.chainId;
+  const isHovered = hoveredId === item?.chainId;
+  const isSelected = selected?.itemId === item?.itemId;
+  const isLastSelected = lastSelected?.itemId === item?.itemId;
+
+  const itemClasses = cn(
+    'rounded cursor-grab bg-background transition-colors duration-100 ease-in-out border relative overflow-hidden',
+    isActive ? 'bg-emerald-600 dark:bg-emerald-800' : '',
+    isHovered ? 'bg-orange-500 dark:bg-orange-700' : '',
+    isSelected
+      ? `rounded-lg cursor-default absolute inset-0 h-1/2 w-full 
+        md:w-1/2 m-auto z-50 flex justify-center items-center flex-wrap flex-col`
+      : isLastSelected
+        ? 'z-40 rounded-xl h-full w-full'
+        : 'rounded-xl h-full w-full',
+  );
 
   return (
-    <motion.div
-      draggable
-      layout
-      onDragStart={handleOnDragStart}
-      onDragOver={(e) => handleOnDragOver(e, item.chainId)}
-      onDragLeave={handleOnDragLeave}
-      onDrop={onHandleOnDrop}
-      className={cn(
-        defaultClassName,
-        `${activeChainId === item.chainId ? 'bg-emerald-600 dark:bg-emerald-800' : ''}`,
-        `${hoveredId === item.chainId ? 'bg-orange-500 dark:bg-orange-700' : ''}`,
-      )}
-      whileTap={{
-        scale: 1.12,
-        boxShadow: '0px 5px 5px rgba(0,0,0,0.1)',
-      }}
-      whileHover={{
-        scale: 1.12,
-        boxShadow: '0px 5px 5px rgba(249,115,22,0.1)',
-      }}
-    >
-      <div className="flex flex-col p-2 relative">
-        <Badge className="bg-teal-600 dark:bg-teal-300 absolute right-2">
-          {item.itemLevel}
-        </Badge>
-
-        <img
-          className="m-auto mt-2"
-          width={36}
-          src={`src/assets/images/board-icons/${item?.icon}`}
-          alt={`${item?.chainId} Icon`}
-        />
-        <small className="inline-block truncate text-center">
-          {item?.chainId}
-        </small>
-      </div>
-    </motion.div>
+    <div className="col-span-1">
+      <motion.div
+        draggable={!!item?.itemType}
+        layout
+        onClick={() => handleClick(item as Item)}
+        onDragStart={handleOnDragStart}
+        onDragOver={(e) => item && handleOnDragOver(e, item.chainId)}
+        onDragLeave={handleOnDragLeave}
+        onDrop={onHandleOnDrop}
+        className={itemClasses}
+      >
+        {item?.icon ? (
+          <div className="flex flex-col p-2">
+            <div className="m-auto mt-2 bg-background relative">
+              <Badge className="bg-teal-600 dark:bg-teal-300 absolute -right-4 -top-2">
+                {item?.itemLevel}
+              </Badge>
+              <img
+                width={36}
+                className="mx-4"
+                src={`src/assets/images/board-icons/${item?.icon}`}
+                alt={`${item?.chainId} Icon`}
+              />
+            </div>
+            <small className="inline-block truncate text-center">
+              {item?.chainId}
+            </small>
+          </div>
+        ) : (
+          <Button
+            variant="ghost"
+            className={cn(!isSelected ? 'w-full h-full' : '')}
+          >
+            <PlusSquare size={24} />
+          </Button>
+        )}
+        {isSelected && <BoardSelectedItem item={selected} />}
+      </motion.div>
+    </div>
   );
 };

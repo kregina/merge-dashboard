@@ -14,11 +14,6 @@ export const useBoardItem = (props: BoardItemProps) => {
 
   const [hoveredId, setHoveredId] = useState<string | number | null>(null);
 
-  const defaultClassName = `rounded-lg cursor-grab bg-background
-  transition-colors duration-100 ease-in-out
-  border
-  `;
-
   const handleOnDragStart = () => {
     setDragStartIndex(index);
     setActiveChainId(chainId);
@@ -47,7 +42,6 @@ export const useBoardItem = (props: BoardItemProps) => {
     handleOnDragOver,
     handleOnDragLeave,
     onHandleOnDrop,
-    defaultClassName,
     handleOnDragStart,
   };
 };
