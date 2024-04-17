@@ -53,7 +53,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
   const isLastSelected = lastSelected?.itemId === item?.itemId;
 
   const itemClasses = cn(
-    'rounded cursor-grab bg-background transition-colors duration-100 ease-in-out border relative overflow-hidden',
+    'rounded cursor-grab bg-background transition-colors duration-100 ease-in-out border relative overflow-hidden drop-shadow',
     isActive ? 'bg-emerald-600 dark:bg-emerald-800' : '',
     isHovered ? 'bg-orange-500 dark:bg-orange-700' : '',
     isSelected
@@ -96,7 +96,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
         ) : (
           <Button
             variant="ghost"
-            className={cn(!isSelected ? 'w-full h-full' : '')}
+            className={cn(!isSelected ? 'w-full h-full bg-secondary' : '')}
           >
             <PlusSquare size={24} />
           </Button>
