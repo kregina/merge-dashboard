@@ -79,7 +79,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
         {item?.icon ? (
           <div
             className={cn(
-              'flex flex-col  p-2',
+              'flex flex-col p-2',
               `${!isSelected ? 'h-full justify-between' : 'lg:pl-8'}`,
             )}
           >

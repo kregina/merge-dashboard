@@ -34,3 +34,26 @@ export const fetchBoard = async () => {
   };
   return data;
 };
+
+export interface UpdateBoardProps {
+  currentItemId: string;
+  newItem: Item;
+  board: Board;
+}
+
+export const updateBoard = async (options: UpdateBoardProps) => {
+  const { currentItemId, newItem, board } = options;
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const newBoard = board.items.map((item) => {
+    if (item?.itemId === currentItemId) {
+      return {
+        ...newItem,
+        itemId: currentItemId,
+      };
+    }
+  });
+
+  return newBoard;
+};
