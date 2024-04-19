@@ -36,24 +36,25 @@ export const fetchBoard = async () => {
 };
 
 export interface UpdateBoardProps {
-  currentItemId: string;
+  index: number;
   newItem: Item;
   board: Board;
 }
 
 export const updateBoard = async (options: UpdateBoardProps) => {
-  const { currentItemId, newItem, board } = options;
+  const { index, newItem, board } = options;
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const newBoard = board.items.map((item) => {
-    if (item?.itemId === currentItemId) {
-      return {
-        ...newItem,
-        itemId: currentItemId,
-      };
-    }
-  });
+  // add newItem to the selected index place of the board
+  const newBoard = {
+    ...board,
+    items: [
+      ...board.items.slice(0, index),
+      newItem,
+      ...board.items.slice(index + 1),
+    ],
+  };
 
   return newBoard;
 };

@@ -6,8 +6,12 @@ import { BoardItemEdit } from './BoardItemEdit';
 
 interface BoardSelectedItemProps {
   item: Item | null;
+  index: number;
 }
-export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({ item }) => {
+export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({
+  item,
+  index,
+}) => {
   return (
     <div className="h-full w-[80%] flex flex-col relative z-[60]">
       <motion.div
@@ -37,7 +41,7 @@ export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({ item }) => {
         {item?.itemType ? (
           <BoardItemEdit item={item} />
         ) : (
-          <BoardItemAdd item={item} />
+          <BoardItemAdd index={index} />
         )}
       </motion.div>
     </div>

@@ -2,34 +2,36 @@ import { swapArrayItems } from '@/lib/swapArrayItems';
 import { cn } from '@/lib/utils';
 import { Board, Item } from '@/services/board';
 import { useCallback, useMemo, useState } from 'react';
+import { BoardContextProps } from './BoardContext';
 
 export function useBoardGrid(board: Board) {
   const [boardState, setBoardState] = useState({
+    board: board,
     boardItems: board.items,
     dragStartIndex: null as number | null,
     activeChainId: null as string | null,
-    selected: null as Item | null,
-    lastSelected: null as Item | null,
+    openedItem: null as Item | null,
+    lastOpenedItem: null as Item | null,
   });
 
   const handleItemClick = useCallback(
     (card: Item) => {
       setBoardState((prev) => ({
         ...prev,
-        lastSelected: boardState.selected,
-        selected: card,
+        lastOpenedItem: boardState.openedItem,
+        openedItem: card,
       }));
     },
-    [boardState.selected],
+    [boardState.openedItem],
   );
 
   const handleOutsideClick = useCallback(() => {
     setBoardState((prev) => ({
       ...prev,
-      lastSelected: boardState.selected,
-      selected: null,
+      lastOpenedItem: boardState.openedItem,
+      openedItem: null,
     }));
-  }, [boardState.selected]);
+  }, [boardState.openedItem]);
 
   const handleDrop = useCallback(
     (dropIndex: number) => {
@@ -65,9 +67,20 @@ export function useBoardGrid(board: Board) {
     () =>
       cn(
         'absolute h-full w-full left-0 top-0 bg-foreground opacity-0 z-10',
-        boardState.selected ? 'pointer-events-auto' : 'pointer-events-none',
+        boardState.openedItem ? 'pointer-events-auto' : 'pointer-events-none',
       ),
-    [boardState.selected],
+    [boardState.openedItem],
+  );
+
+  const boardContextValues: BoardContextProps = useMemo(
+    () => ({
+      board,
+      setBoardItems: (items: Array<Item | null>) =>
+        setBoardState((prev) => ({ ...prev, boardItems: items })),
+      closeItem: (openedItem: Item | null) =>
+        setBoardState((prev) => ({ ...prev, openedItem })),
+    }),
+    [boardState.board],
   );
 
   return {
@@ -78,5 +91,6 @@ export function useBoardGrid(board: Board) {
     handleDrop,
     gridStyle,
     overlayClasses,
+    boardContextValues,
   };
 }

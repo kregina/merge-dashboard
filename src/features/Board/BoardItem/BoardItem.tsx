@@ -121,7 +121,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
             <PlusSquare size={24} />
           </Button>
         )}
-        {isSelected && <BoardSelectedItem item={selected} />}
+        {isSelected && <BoardSelectedItem item={selected} index={index} />}
       </motion.div>
     </div>
   );
