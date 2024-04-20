@@ -1,6 +1,6 @@
 import { Badge, Button } from '@/components';
 import { cn } from '@/lib/utils';
-import { Item, ItemVisibility } from '@/services/board';
+import { Item, ItemVisibility } from '@/services';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, PlusSquare } from 'lucide-react';
 import { FC } from 'react';

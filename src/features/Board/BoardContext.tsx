@@ -1,4 +1,4 @@
-import { Item } from '@/services/board';
+import { Item } from '@/services';
 import { createContext } from 'react';
 
 export interface BoardContextProps {

@@ -1,4 +1,4 @@
-import { Item } from '@/services/board';
+import { Item } from '@/services';
 import { motion } from 'framer-motion';
 import { FC } from 'react';
 import { BoardItemAdd } from './BoardItemAdd';

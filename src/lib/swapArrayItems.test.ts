@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { swapArrayItems } from './swapArrayItems'; // Adjust the import path as needed
+import { swapArrayItems } from './swapArrayItems';
 
 describe('swapArrayItems', () => {
   it('should swap two items in an array', () => {

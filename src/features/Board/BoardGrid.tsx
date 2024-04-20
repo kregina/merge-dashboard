@@ -1,5 +1,5 @@
 import { Card } from '@/components';
-import { Board } from '@/services/board';
+import { Board } from '@/services';
 import { motion } from 'framer-motion';
 import { FC } from 'react';
 import { BoardProvider } from './BoardContext';

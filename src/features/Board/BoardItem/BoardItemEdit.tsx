@@ -4,7 +4,7 @@ import {
   ItemVisibility,
   deleteItemFromBoard,
   updateItemToBoard,
-} from '@/services/board';
+} from '@/services';
 import { useMutation } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Eye, EyeOff, Play, Save, Trash } from 'lucide-react';
@@ -96,7 +96,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
   return (
     <div className="flex gap-4 flex-col py-8">
       <h1 className="text-lg flex justify-between">
-        {currentItem?.itemType}
+        {currentItem?.chainId}
         {currentItem?.isInsideBubble && (
           <Badge className="ml-4 bg-teal-600 dark:bg-teal-300">
             Inside Bubble

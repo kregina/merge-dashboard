@@ -1,5 +1,5 @@
+import { ItemVisibility } from '@/services';
 import { v4 as uuidv4 } from 'uuid';
-import { ItemVisibility } from '../board';
 
 export const itemsToBeAdded = [
   {

@@ -1,6 +1,6 @@
 import { swapArrayItems } from '@/lib/swapArrayItems';
 import { cn } from '@/lib/utils';
-import { Board, Item } from '@/services/board';
+import { Board, Item } from '@/services';
 import { useCallback, useMemo, useState } from 'react';
 import { BoardContextProps } from './BoardContext';
 

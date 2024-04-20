@@ -1,4 +1,4 @@
-import { fetchBoard } from '@/services/board';
+import { fetchBoard } from '@/services';
 import { queryOptions } from '@tanstack/react-query';
 
 export const getBoardQueryOptions = queryOptions({

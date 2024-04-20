@@ -7,7 +7,7 @@ import {
   SelectValue,
   Separator,
 } from '@/components';
-import { Item, addItemToBoard } from '@/services/board';
+import { Item, addItemToBoard } from '@/services';
 import { itemsToBeAdded } from '@/services/data/itemsTobeAdded';
 import { useMutation } from '@tanstack/react-query';
 import { Save } from 'lucide-react';
