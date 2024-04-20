@@ -4,6 +4,15 @@ import { Board, Item } from '@/services';
 import { useCallback, useMemo, useState } from 'react';
 import { BoardContextProps } from './BoardContext';
 
+type BoardStateUpdate = Partial<{
+  board: Board;
+  boardItems: Array<Item | null>;
+  dragStartIndex: number | null;
+  activeChainId: string | null;
+  openedItem: Item | null;
+  lastOpenedItem: Item | null;
+}>;
+
 export function useBoardGrid(board: Board) {
   const [boardState, setBoardState] = useState({
     board: board,
@@ -14,24 +23,26 @@ export function useBoardGrid(board: Board) {
     lastOpenedItem: null as Item | null,
   });
 
+  const updateBoardState = useCallback((newState: BoardStateUpdate) => {
+    setBoardState((prev) => ({ ...prev, ...newState }));
+  }, []);
+
   const handleItemClick = useCallback(
-    (card: Item) => {
-      setBoardState((prev) => ({
-        ...prev,
+    (item: Item) => {
+      updateBoardState({
         lastOpenedItem: boardState.openedItem,
-        openedItem: card,
-      }));
+        openedItem: item,
+      });
     },
-    [boardState.openedItem],
+    [boardState.openedItem, updateBoardState],
   );
 
   const handleOutsideClick = useCallback(() => {
-    setBoardState((prev) => ({
-      ...prev,
+    updateBoardState({
       lastOpenedItem: boardState.openedItem,
       openedItem: null,
-    }));
-  }, [boardState.openedItem]);
+    });
+  }, [boardState.openedItem, updateBoardState]);
 
   const handleDrop = useCallback(
     (dropIndex: number) => {
@@ -44,15 +55,14 @@ export function useBoardGrid(board: Board) {
           boardState.dragStartIndex,
           dropIndex,
         );
-        setBoardState((prev) => ({ ...prev, boardItems: swappedArray }));
+        updateBoardState({ boardItems: swappedArray });
       }
-      setBoardState((prev) => ({
-        ...prev,
+      updateBoardState({
         dragStartIndex: null,
         activeChainId: null,
-      }));
+      });
     },
-    [boardState.boardItems, boardState.dragStartIndex],
+    [boardState.dragStartIndex, boardState.boardItems, updateBoardState],
   );
 
   const gridStyle = useMemo(
@@ -76,11 +86,10 @@ export function useBoardGrid(board: Board) {
     () => ({
       boardItems: boardState.boardItems,
       setBoardItems: (items: Array<Item | null>) =>
-        setBoardState((prev) => ({ ...prev, boardItems: items })),
-      closeItem: (openedItem: Item | null) =>
-        setBoardState((prev) => ({ ...prev, openedItem })),
+        updateBoardState({ boardItems: items }),
+      closeItem: (openedItem: Item | null) => updateBoardState({ openedItem }),
     }),
-    [boardState.boardItems, boardState.openedItem],
+    [boardState.boardItems, updateBoardState],
   );
 
   return {

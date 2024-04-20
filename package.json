@@ -26,6 +26,8 @@
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.0.28",
+    "jsdom": "^24.0.0",
+    "jsdom-global": "^3.0.2",
     "lucide-react": "^0.368.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.28.11",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
