@@ -47,7 +47,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
               </Badge>
             )}
 
-            <Button variant="ghost" className="border" onClick={onDelete}>
+            <Button variant="destructive" className="border" onClick={onDelete}>
               <Trash className=" h-4 w-4" />
             </Button>
           </div>
