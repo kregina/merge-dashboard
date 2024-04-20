@@ -1,6 +1,5 @@
-export { Header } from './layout/Header';
-export { SideNav } from './layout/SideNav';
-export { ModeToggle } from './layout/mode-toggle';
+export { Header } from './layout/header';
+export { SideNav } from './layout/side-nav';
 export * from './theme-provider';
 export * from './ui/badge';
 export * from './ui/button';
@@ -8,6 +7,7 @@ export * from './ui/card';
 export * from './ui/dropdown-menu';
 export * from './ui/input';
 export * from './ui/label';
+export { ModeToggle } from './ui/mode-toggle';
 export * from './ui/select';
 export * from './ui/separator';
 export * from './ui/sheet';
