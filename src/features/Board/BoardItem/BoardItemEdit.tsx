@@ -1,8 +1,13 @@
 import { Badge, Button, Input, Label, Separator } from '@/components';
-import { Item, ItemVisibility, updateItemToBoard } from '@/services/board';
+import {
+  Item,
+  ItemVisibility,
+  deleteItemFromBoard,
+  updateItemToBoard,
+} from '@/services/board';
 import { useMutation } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Eye, EyeOff, Play, Save } from 'lucide-react';
+import { Eye, EyeOff, Play, Save, Trash } from 'lucide-react';
 import { FC, useContext, useState } from 'react';
 import { BoardContext } from '../BoardContext';
 
@@ -28,6 +33,22 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
       updateItemToBoard({
         boardItems: boardContext.boardItems,
         updatedItem: updatedItem,
+      }),
+
+    onSuccess: (data) => {
+      boardContext.setBoardItems(data);
+      boardContext.closeItem(null);
+    },
+  });
+
+  const mutationDelete = useMutation({
+    mutationFn: (itemId: string) =>
+      deleteItemFromBoard({
+        boardItems: boardContext.boardItems,
+        itemId: itemId,
+        index: boardContext.boardItems.findIndex(
+          (item) => item?.itemId === itemId,
+        ),
       }),
 
     onSuccess: (data) => {
@@ -66,6 +87,12 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
     });
   };
 
+  const onDelete = () => {
+    if (currentItem) {
+      mutationDelete.mutate(currentItem.itemId);
+    }
+  };
+
   return (
     <div className="flex gap-4 flex-col py-8">
       <h1 className="text-lg flex justify-between">
@@ -75,6 +102,10 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
             Inside Bubble
           </Badge>
         )}
+
+        <Button variant="ghost" className="border" onClick={onDelete}>
+          <Trash className=" h-4 w-4" />
+        </Button>
       </h1>
 
       <Separator />

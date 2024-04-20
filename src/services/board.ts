@@ -74,3 +74,27 @@ export const updateItemToBoard = async (options: updateItemOfBoardProps) => {
 
   return newBoard;
 };
+
+interface DeleteItemOfBoardProps {
+  itemId: string;
+  boardItems: Array<Item | null>;
+  index: number;
+}
+
+export const deleteItemFromBoard = async (options: DeleteItemOfBoardProps) => {
+  const { itemId, boardItems, index } = options;
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const emptyItem = {
+    itemId: itemId,
+  };
+
+  const newBoard = [
+    ...boardItems.slice(0, index),
+    emptyItem,
+    ...boardItems.slice(index + 1),
+  ] as Array<Item | null>;
+
+  return newBoard;
+};
