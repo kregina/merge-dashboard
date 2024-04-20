@@ -32,7 +32,7 @@ export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
   const overlayClasses = useMemo(
     () =>
       cn(
-        'absolute h-full w-full left-0 top-0 bg-foreground opacity-0 z-10',
+        'absolute h-full w-full -left-2 top-0 bg-foreground opacity-0 z-10',
         boardState.openedItem ? 'pointer-events-auto' : 'pointer-events-none',
       ),
     [boardState.openedItem],

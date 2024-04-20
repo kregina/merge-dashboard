@@ -1,11 +1,13 @@
 import {
   Button,
+  Card,
+  CardContent,
+  CardFooter,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Separator,
 } from '@/components';
 import { Item, addItemToBoard } from '@/services';
 import { itemsToBeAdded } from '@/services/data/itemsTobeAdded';
@@ -49,28 +51,28 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ index }) => {
   });
 
   return (
-    <div className="grid grid-rows-2 gap-4 items-center h-full py-10">
-      <Select onValueChange={setSelectedItemId}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Choose an item" />
-        </SelectTrigger>
-        <SelectContent>
-          {itemsToBeAdded.map((item) => (
-            <SelectItem key={item.itemId} value={item.itemId}>
-              {item.itemType}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <Card>
+      <CardContent className="mt-4">
+        <Select onValueChange={setSelectedItemId}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Choose an item" />
+          </SelectTrigger>
+          <SelectContent>
+            {itemsToBeAdded.map((item) => (
+              <SelectItem key={item.itemId} value={item.itemId}>
+                {item.itemType}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </CardContent>
 
-      <Separator />
-
-      <div className="flex justify-end">
+      <CardFooter className="justify-end">
         <Button onClick={handleOnValueChange}>
           <Save className="mr-4" />
           Add Item
         </Button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };

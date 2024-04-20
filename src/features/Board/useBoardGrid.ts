@@ -69,7 +69,7 @@ export function useBoardGrid(board: Board) {
     () => ({
       boardItems: boardState.boardItems,
       setBoardItems: (items: Item[]) => updateBoardState({ boardItems: items }),
-      closeItem: (openedItem: Item) => updateBoardState({ openedItem }),
+      closeItem: (openedItem: Item | null) => updateBoardState({ openedItem }),
     }),
     [boardState.boardItems, updateBoardState],
   );

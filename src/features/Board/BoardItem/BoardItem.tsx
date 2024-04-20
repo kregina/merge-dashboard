@@ -1,12 +1,13 @@
-import { Button } from '@/components';
+import { generateItemClasses } from '@/lib/generateItemClasses';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { motion } from 'framer-motion';
 import { PlusSquare } from 'lucide-react';
 import { FC, useMemo } from 'react';
+import { BoardItemAdd } from './BoardItemAdd';
 import { BoardItemBadge } from './BoardItemBadge';
+import { BoardItemEdit } from './BoardItemEdit';
 import { BoardItemImage } from './BoardItemImage';
-import { BoardItemSelected } from './BoardItemSelected';
 import { useBoardItem } from './useBoardItem';
 
 interface BoardItemProps {
@@ -25,8 +26,8 @@ export const BoardItem: FC<BoardItemProps> = ({
   item,
   index,
   activeChainId,
-  setActiveChainId,
   setDragStartIndex,
+  setActiveChainId,
   handleDrop,
   handleClick,
   selected,
@@ -52,17 +53,8 @@ export const BoardItem: FC<BoardItemProps> = ({
   const isLastSelected = lastSelected?.itemId === item?.itemId;
 
   const itemClasses = useMemo(
-    () =>
-      cn(
-        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden',
-        isActive && 'bg-emerald-600 dark:bg-emerald-800',
-        isHovered && 'bg-orange-500 dark:bg-orange-700',
-        isSelected
-          ? 'bg-background rounded-lg cursor-default absolute inset-0 h-full lg:max-h-[40%] w-full md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col'
-          : 'rounded-xl h-full w-full',
-        isLastSelected && 'z-40',
-      ),
-    [isActive, isHovered, isSelected, isLastSelected],
+    () => generateItemClasses(isActive, isHovered, isSelected, isLastSelected),
+    [hoveredId, activeChainId, selected, lastSelected],
   );
 
   return (
@@ -70,42 +62,48 @@ export const BoardItem: FC<BoardItemProps> = ({
       <motion.div
         draggable={!!item?.itemType}
         layout
-        onClick={() => handleClick(item as Item)}
+        onClick={() => handleClick(item)}
         onDragStart={handleOnDragStart}
-        onDragOver={(e) => item && handleOnDragOver(e, item.chainId)}
+        onDragOver={(e) => handleOnDragOver(e, item.chainId)}
         onDragLeave={handleOnDragLeave}
         onDrop={onHandleOnDrop}
         className={itemClasses}
       >
-        {item.icon ? (
+        {item.itemType ? (
           <div className="relative">
             {!isSelected && (
               <BoardItemBadge
-                pausedUntil={item?.pausedUntil}
-                itemLevel={item?.itemLevel}
+                pausedUntil={item.pausedUntil}
+                itemLevel={item.itemLevel}
               />
             )}
-
             <BoardItemImage
-              icon={item.icon}
+              icon={item.icon || ''}
               isSelected={isSelected}
-              chainId={item?.chainId}
+              chainId={item.chainId}
               isInsideBubble={item.isInsideBubble}
             />
           </div>
         ) : (
-          <Button
-            variant="ghost"
+          <div
             className={cn(
+              'flex justify-center',
               !isSelected
-                ? 'w-full h-full bg-transparent text-background text-zinc-800'
+                ? ` items-center w-full h-full bg-transparent
+                    text-background text-zinc-800 hover:opacity-45 transition-opacity duration-300`
                 : '',
             )}
           >
             <PlusSquare size={32} />
-          </Button>
+          </div>
         )}
-        {isSelected && <BoardItemSelected item={selected} index={index} />}
+
+        {isSelected &&
+          (item.itemType ? (
+            <BoardItemEdit item={item} />
+          ) : (
+            <BoardItemAdd index={index} />
+          ))}
       </motion.div>
     </div>
   );

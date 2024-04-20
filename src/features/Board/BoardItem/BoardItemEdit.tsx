@@ -1,7 +1,17 @@
-import { Badge, Button, Input, Label, Separator } from '@/components';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  Input,
+  Label,
+  Separator,
+} from '@/components';
 import { Item, ItemVisibility } from '@/services';
 import { Eye, EyeOff, Play, Save, Trash } from 'lucide-react';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useBoardItemEdit } from './useBoardItemEdit';
 
 interface BoardItemEditProps {
@@ -19,79 +29,95 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
     mutationUpdate,
   } = useBoardItemEdit({ item });
 
+  const fieldWrapperClasses = useMemo(
+    () => 'flex items-center space-x-2 justify-between mb-4',
+    [currentItem],
+  );
+
   return (
-    <div className="flex gap-4 flex-col py-8">
-      <h1 className="text-lg flex justify-between">
-        {currentItem?.chainId}
-        {currentItem?.isInsideBubble && (
-          <Badge className="ml-4 bg-teal-600 dark:bg-teal-300">
-            Inside Bubble
-          </Badge>
-        )}
+    <Card>
+      <CardHeader>
+        <h1 className="text-lg flex justify-between mb-4">
+          {currentItem?.chainId}
+          <div>
+            {currentItem?.isInsideBubble && (
+              <Badge className="mr-4 bg-teal-600 dark:bg-teal-300">
+                Inside Bubble
+              </Badge>
+            )}
 
-        <Button variant="ghost" className="border" onClick={onDelete}>
-          <Trash className=" h-4 w-4" />
-        </Button>
-      </h1>
+            <Button variant="ghost" className="border" onClick={onDelete}>
+              <Trash className=" h-4 w-4" />
+            </Button>
+          </div>
+        </h1>
+        <Separator />
+      </CardHeader>
 
-      <Separator />
+      <CardContent>
+        <div className={fieldWrapperClasses}>
+          <Label htmlFor="level">Level:</Label>
+          <Input
+            id="level"
+            type="number"
+            defaultValue={currentItem?.itemLevel || 1}
+            min={1}
+            max={50}
+            className="w-auto text-center"
+            onChange={onChangeLevel}
+          />
+        </div>
 
-      <div className="flex items-center space-x-2 justify-between">
-        <Label htmlFor="level">Level:</Label>
-        <Input
-          id="level"
-          type="number"
-          defaultValue={currentItem?.itemLevel || 1}
-          min={1}
-          max={50}
-          className="w-auto text-center"
-          onChange={onChangeLevel}
-        />
-      </div>
-
-      <div className="flex items-center space-x-2 justify-between">
-        <p>
-          Item is
-          <span className="text-orange-500"> {currentItem?.visibility}</span> to
-          the player.
-        </p>
-
-        <Button variant="ghost" className="border" onClick={onToggleVisibility}>
-          {currentItem?.visibility === ItemVisibility.VISIBLE ? (
-            <Eye className="mr-2 h-4 w-4" />
-          ) : (
-            <EyeOff className="mr-2 h-4 w-4" />
-          )}
-          Toggle Visibility
-        </Button>
-      </div>
-
-      {isPausedUntil && (
-        <div className="flex items-center space-x-2 justify-between">
+        <div className={fieldWrapperClasses}>
           <p>
-            Is paused until
+            Item is
             <span className="text-orange-500">
-              {` ${isPausedUntil?.toLocaleString()}`}
-            </span>
+              {' '}
+              {currentItem?.visibility}
+            </span>{' '}
+            to the player.
           </p>
 
-          <Button variant="ghost" className="border" onClick={onUnpause}>
-            <Play className="mr-2 h-4 w-4" />
-            Unpause
+          <Button
+            variant="ghost"
+            className="border"
+            onClick={onToggleVisibility}
+          >
+            {currentItem?.visibility === ItemVisibility.VISIBLE ? (
+              <Eye className="mr-2 h-4 w-4" />
+            ) : (
+              <EyeOff className="mr-2 h-4 w-4" />
+            )}
+            Toggle Visibility
           </Button>
         </div>
-      )}
 
-      <Separator />
+        {isPausedUntil && (
+          <div className={fieldWrapperClasses}>
+            <p>
+              Is paused until
+              <span className="text-orange-500">
+                {` ${isPausedUntil?.toLocaleString()}`}
+              </span>
+            </p>
 
-      <div className="flex justify-end">
+            <Button variant="ghost" className="border" onClick={onUnpause}>
+              <Play className="mr-2 h-4 w-4" />
+              Unpause
+            </Button>
+          </div>
+        )}
+        <Separator />
+      </CardContent>
+
+      <CardFooter className="justify-end">
         <Button
           onClick={() => currentItem && mutationUpdate.mutate(currentItem)}
         >
           <Save className="mr-4" />
           Update Item
         </Button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
