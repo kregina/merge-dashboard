@@ -27,25 +27,22 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ index }) => {
   }
 
   const handleOnValueChange = () => {
-    console.log('selectedItemId', selectedItemId);
     const itemTobeAdded = itemsToBeAdded.find(
       (item) => item.itemId === selectedItemId,
     );
 
-    console.log('itemTobeAdded', itemTobeAdded);
     if (itemTobeAdded) mutation.mutate(itemTobeAdded);
   };
 
   const mutation = useMutation({
     mutationFn: (itemTobeAdded: Item) =>
       updateBoard({
-        board: boardContext.board,
+        boardItems: boardContext.boardItems,
         index: index,
         newItem: itemTobeAdded,
       }),
     onSuccess: (data) => {
-      console.log('data', data);
-      boardContext.setBoardItems(data.items);
+      boardContext.setBoardItems(data);
       boardContext.closeItem(null);
     },
   });

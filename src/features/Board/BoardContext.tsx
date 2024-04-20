@@ -1,8 +1,8 @@
-import { Board, Item } from '@/services/board';
+import { Item } from '@/services/board';
 import { createContext } from 'react';
 
 export interface BoardContextProps {
-  board: Board;
+  boardItems: Array<Item | null>;
   setBoardItems: (items: Array<Item | null>) => void;
   closeItem: (openedItem: null) => void;
 }

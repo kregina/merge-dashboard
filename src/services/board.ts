@@ -38,23 +38,20 @@ export const fetchBoard = async () => {
 export interface UpdateBoardProps {
   index: number;
   newItem: Item;
-  board: Board;
+  boardItems: Array<Item | null>;
 }
 
 export const updateBoard = async (options: UpdateBoardProps) => {
-  const { index, newItem, board } = options;
+  const { index, newItem, boardItems } = options;
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  // add newItem to the selected index place of the board
-  const newBoard = {
-    ...board,
-    items: [
-      ...board.items.slice(0, index),
-      newItem,
-      ...board.items.slice(index + 1),
-    ],
-  };
+  // replace the item at the index with the new item
+  const newBoard = [
+    ...boardItems.slice(0, index),
+    { ...newItem, itemId: boardItems[index]?.itemId },
+    ...boardItems.slice(index + 1),
+  ] as Array<Item | null>;
 
   return newBoard;
 };

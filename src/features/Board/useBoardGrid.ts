@@ -74,13 +74,13 @@ export function useBoardGrid(board: Board) {
 
   const boardContextValues: BoardContextProps = useMemo(
     () => ({
-      board,
+      boardItems: boardState.boardItems,
       setBoardItems: (items: Array<Item | null>) =>
         setBoardState((prev) => ({ ...prev, boardItems: items })),
       closeItem: (openedItem: Item | null) =>
         setBoardState((prev) => ({ ...prev, openedItem })),
     }),
-    [boardState.board],
+    [boardState.boardItems, boardState.openedItem],
   );
 
   return {
