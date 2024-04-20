@@ -4,11 +4,11 @@ import { FC } from 'react';
 import { BoardItemAdd } from './BoardItemAdd';
 import { BoardItemEdit } from './BoardItemEdit';
 
-interface BoardSelectedItemProps {
+interface BoardItemSelectedProps {
   item: Item | null;
   index: number;
 }
-export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({
+export const BoardItemSelected: FC<BoardItemSelectedProps> = ({
   item,
   index,
 }) => {

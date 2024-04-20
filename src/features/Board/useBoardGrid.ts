@@ -1,5 +1,4 @@
 import { swapArrayItems } from '@/lib/swapArrayItems';
-import { cn } from '@/lib/utils';
 import { Board, Item } from '@/services';
 import { useCallback, useMemo, useState } from 'react';
 import { BoardContextProps } from './BoardContext';
@@ -65,23 +64,6 @@ export function useBoardGrid(board: Board) {
     [boardState.dragStartIndex, boardState.boardItems, updateBoardState],
   );
 
-  const gridStyle = useMemo(
-    () => ({
-      gridTemplateColumns: `repeat(${board.width}, minmax(0, 1fr))`,
-      gridTemplateRows: `repeat(${board.height}, minmax(0, 1fr))`,
-    }),
-    [board.width, board.height],
-  );
-
-  const overlayClasses = useMemo(
-    () =>
-      cn(
-        'absolute h-full w-full left-0 top-0 bg-foreground opacity-0 z-10',
-        boardState.openedItem ? 'pointer-events-auto' : 'pointer-events-none',
-      ),
-    [boardState.openedItem],
-  );
-
   const boardContextValues: BoardContextProps = useMemo(
     () => ({
       boardItems: boardState.boardItems,
@@ -98,8 +80,6 @@ export function useBoardGrid(board: Board) {
     handleItemClick,
     handleOutsideClick,
     handleDrop,
-    gridStyle,
-    overlayClasses,
     boardContextValues,
   };
 }

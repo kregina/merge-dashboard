@@ -1,7 +1,8 @@
 import { Card } from '@/components';
+import { cn } from '@/lib/utils';
 import { Board } from '@/services';
 import { motion } from 'framer-motion';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { BoardProvider } from './BoardContext';
 import { BoardItem } from './BoardItem/BoardItem';
 import { useBoardGrid } from './useBoardGrid';
@@ -17,17 +18,32 @@ export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
     handleItemClick,
     handleOutsideClick,
     handleDrop,
-    gridStyle,
-    overlayClasses,
     boardContextValues,
   } = useBoardGrid(board);
 
+  const gridStyle = useMemo(
+    () => ({
+      gridTemplateColumns: `repeat(${board.width}, minmax(0, 1fr))`,
+      gridTemplateRows: `repeat(${board.height}, minmax(0, 1fr))`,
+    }),
+    [board.width, board.height],
+  );
+
+  const overlayClasses = useMemo(
+    () =>
+      cn(
+        'absolute h-full w-full left-0 top-0 bg-foreground opacity-0 z-10',
+        boardState.openedItem ? 'pointer-events-auto' : 'pointer-events-none',
+      ),
+    [boardState.openedItem],
+  );
+
   return (
     <BoardProvider value={boardContextValues}>
-      <div className="max-w-[800px] m-auto">
+      <div className="m-auto">
         <Card>
           <div
-            className="w-full h-full grid max-w-7xl mx-auto"
+            className="w-full h-full grid border-4 border-[#c2a061] bg-[#e4dccc] rounded-xl p-1 gap-1"
             style={gridStyle}
           >
             {boardState.boardItems.map((item, index) => (

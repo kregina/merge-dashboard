@@ -1,10 +1,12 @@
-import { Badge, Button } from '@/components';
+import { Button } from '@/components';
 import { cn } from '@/lib/utils';
-import { Item, ItemVisibility } from '@/services';
+import { Item } from '@/services';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, PlusSquare } from 'lucide-react';
-import { FC } from 'react';
-import { BoardSelectedItem } from './BoardSelectedItem';
+import { PlusSquare } from 'lucide-react';
+import { FC, useMemo } from 'react';
+import { BoardItemBadge } from './BoardItemBadge';
+import { BoardItemImage } from './BoardItemImage';
+import { BoardItemSelected } from './BoardItemSelected';
 import { useBoardItem } from './useBoardItem';
 
 interface BoardItemProps {
@@ -19,19 +21,17 @@ interface BoardItemProps {
   lastSelected: Item | null;
 }
 
-export const BoardItem: FC<BoardItemProps> = (props) => {
-  const {
-    item,
-    index,
-    activeChainId,
-    setActiveChainId,
-    setDragStartIndex,
-    handleDrop,
-    handleClick,
-    selected,
-    lastSelected,
-  } = props;
-
+export const BoardItem: FC<BoardItemProps> = ({
+  item,
+  index,
+  activeChainId,
+  setActiveChainId,
+  setDragStartIndex,
+  handleDrop,
+  handleClick,
+  selected,
+  lastSelected,
+}) => {
   const {
     hoveredId,
     handleOnDragOver,
@@ -46,26 +46,27 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     index,
   });
 
-  // Class management
   const isActive = activeChainId === item?.chainId;
   const isHovered = hoveredId === item?.chainId;
   const isSelected = selected?.itemId === item?.itemId;
   const isLastSelected = lastSelected?.itemId === item?.itemId;
 
-  const itemClasses = cn(
-    'rounded cursor-grab bg-background transition-colors duration-100 ease-in-out border relative overflow-hidden drop-shadow',
-    isActive ? 'bg-emerald-600 dark:bg-emerald-800' : '',
-    isHovered ? 'bg-orange-500 dark:bg-orange-700' : '',
-    isSelected
-      ? `rounded-lg cursor-default absolute inset-0 h-full lg:max-h-[40%] w-full 
-        md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col`
-      : isLastSelected
-        ? 'z-40 rounded-xl h-full w-full'
-        : 'rounded-xl h-full w-full',
+  const itemClasses = useMemo(
+    () =>
+      cn(
+        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden',
+        isActive && 'bg-emerald-600 dark:bg-emerald-800',
+        isHovered && 'bg-orange-500 dark:bg-orange-700',
+        isSelected
+          ? 'rounded-lg cursor-default absolute inset-0 h-full lg:max-h-[40%] w-full md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col'
+          : 'rounded-xl h-full w-full',
+        isLastSelected && 'z-40',
+      ),
+    [isActive, isHovered, isSelected, isLastSelected],
   );
 
   return (
-    <div className="col-span-1 p-1">
+    <div className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded max-w-[80px]">
       <motion.div
         draggable={!!item?.itemType}
         layout
@@ -76,52 +77,35 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
         onDrop={onHandleOnDrop}
         className={itemClasses}
       >
-        {item?.icon ? (
-          <div
-            className={cn(
-              'flex flex-col p-2',
-              `${!isSelected ? 'h-full justify-between' : 'lg:pl-8'}`,
-            )}
-          >
-            <div className="relative">
-              {!isSelected && (
-                <div className="absolute flex flex-col gap-1 right-0 items-center w-auto">
-                  <Badge className="bg-teal-600 dark:bg-teal-300 size-4 p-0 justify-center">
-                    {item?.itemLevel}
-                  </Badge>
-                  <span className="text-orange-500">
-                    {item.visibility === ItemVisibility.VISIBLE ? (
-                      <Eye />
-                    ) : (
-                      <EyeOff />
-                    )}
-                  </span>
-                </div>
-              )}
-
-              <img
-                width={`${isSelected ? '64' : '36'}`}
-                className="m-auto"
-                src={`src/assets/images/board-icons/${item?.icon}`}
-                alt={`${item?.chainId} Icon`}
-              />
-            </div>
-
+        {item?.itemType ? (
+          <div className="relative">
             {!isSelected && (
-              <small className="inline-block truncate text-center max-w-[7rem]">
-                {item?.chainId}
-              </small>
+              <BoardItemBadge
+                pausedUntil={item?.pausedUntil}
+                itemLevel={item?.itemLevel}
+              />
             )}
+
+            <BoardItemImage
+              icon={item.icon}
+              isSelected={isSelected}
+              chainId={item.chainId}
+              isInsideBubble={item.isInsideBubble}
+            />
           </div>
         ) : (
           <Button
             variant="ghost"
-            className={cn(!isSelected ? 'w-full h-full bg-secondary' : '')}
+            className={cn(
+              !isSelected
+                ? 'w-full h-full bg-transparent text-background text-zinc-800'
+                : '',
+            )}
           >
-            <PlusSquare size={24} />
+            <PlusSquare size={32} />
           </Button>
         )}
-        {isSelected && <BoardSelectedItem item={selected} index={index} />}
+        {isSelected && <BoardItemSelected item={selected} index={index} />}
       </motion.div>
     </div>
   );
