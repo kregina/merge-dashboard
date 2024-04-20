@@ -15,7 +15,7 @@ export const BoardItemBadge: FC<BoardItemBadgeProps> = ({
   const isPausedUntil = pausedUntil !== null ? new Date(pausedUntil) : null;
 
   return (
-    <div className="flex flex-col absolute right-0 z-10">
+    <div className="flex flex-col absolute right-0 z-10 gap-2">
       {itemLevel && (
         <Tooltip>
           <TooltipTrigger>

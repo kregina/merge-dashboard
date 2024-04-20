@@ -7,8 +7,6 @@ interface UseBoardGridSate {
   boardItems: Item[];
   dragStartIndex: number | null;
   activeChainId: string | null;
-  openedItem: Item | null;
-  lastOpenedItem: Item | null;
 }
 
 export function useBoardGrid(board: Board) {
@@ -16,8 +14,6 @@ export function useBoardGrid(board: Board) {
     boardItems: board.items,
     dragStartIndex: 0,
     activeChainId: null,
-    openedItem: null,
-    lastOpenedItem: null,
   });
 
   const updateBoardState = useCallback(
@@ -26,23 +22,6 @@ export function useBoardGrid(board: Board) {
     },
     [],
   );
-
-  const handleItemClick = useCallback(
-    (item: Item) => {
-      updateBoardState({
-        lastOpenedItem: boardState.openedItem,
-        openedItem: item,
-      });
-    },
-    [boardState.openedItem, updateBoardState],
-  );
-
-  const handleOutsideClick = useCallback(() => {
-    updateBoardState({
-      lastOpenedItem: boardState.openedItem,
-      openedItem: null,
-    });
-  }, [boardState.openedItem, updateBoardState]);
 
   const handleDrop = useCallback(
     (dropIndex: number) => {
@@ -69,7 +48,6 @@ export function useBoardGrid(board: Board) {
     () => ({
       boardItems: boardState.boardItems,
       setBoardItems: (items: Item[]) => updateBoardState({ boardItems: items }),
-      closeItem: (openedItem: Item | null) => updateBoardState({ openedItem }),
     }),
     [boardState.boardItems, updateBoardState],
   );
@@ -77,8 +55,6 @@ export function useBoardGrid(board: Board) {
   return {
     boardState,
     setBoardState,
-    handleItemClick,
-    handleOutsideClick,
     handleDrop,
     boardContextValues,
   };

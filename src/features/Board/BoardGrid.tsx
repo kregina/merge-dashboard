@@ -1,7 +1,5 @@
 import { Card } from '@/components';
-import { cn } from '@/lib/utils';
 import { Board } from '@/services';
-import { motion } from 'framer-motion';
 import { FC, useMemo } from 'react';
 import { BoardProvider } from './BoardContext';
 import { BoardItem } from './BoardItem/BoardItem';
@@ -12,14 +10,8 @@ interface BoardGridProps {
 }
 
 export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
-  const {
-    boardState,
-    setBoardState,
-    handleItemClick,
-    handleOutsideClick,
-    handleDrop,
-    boardContextValues,
-  } = useBoardGrid(board);
+  const { boardState, setBoardState, handleDrop, boardContextValues } =
+    useBoardGrid(board);
 
   const gridStyle = useMemo(
     () => ({
@@ -27,15 +19,6 @@ export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
       gridTemplateRows: `repeat(${board.height}, minmax(0, 1fr))`,
     }),
     [board.width, board.height],
-  );
-
-  const overlayClasses = useMemo(
-    () =>
-      cn(
-        'absolute h-full w-full -left-2 top-0 bg-foreground opacity-0 z-10',
-        boardState.openedItem ? 'pointer-events-auto' : 'pointer-events-none',
-      ),
-    [boardState.openedItem],
   );
 
   return (
@@ -59,17 +42,9 @@ export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
                   setBoardState((prev) => ({ ...prev, activeChainId: chainId }))
                 }
                 handleDrop={handleDrop}
-                handleClick={handleItemClick}
-                selected={boardState.openedItem}
-                lastSelected={boardState.lastOpenedItem}
               />
             ))}
           </div>
-          <motion.div
-            onClick={handleOutsideClick}
-            className={overlayClasses}
-            animate={{ opacity: boardState.openedItem ? 0.3 : 0 }}
-          />
         </Card>
       </div>
     </BoardProvider>

@@ -1,4 +1,4 @@
-import { generateItemClasses } from '@/lib/generateItemClasses';
+import { Dialog, DialogContent, DialogTrigger } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { motion } from 'framer-motion';
@@ -17,9 +17,6 @@ interface BoardItemProps {
   setDragStartIndex: (index: number) => void;
   setActiveChainId: (chainId: string | null) => void;
   handleDrop: (dropIndex: number) => void;
-  handleClick: (card: Item) => void;
-  selected: Item | null;
-  lastSelected: Item | null;
 }
 
 export const BoardItem: FC<BoardItemProps> = ({
@@ -29,9 +26,6 @@ export const BoardItem: FC<BoardItemProps> = ({
   setDragStartIndex,
   setActiveChainId,
   handleDrop,
-  handleClick,
-  selected,
-  lastSelected,
 }) => {
   const {
     hoveredId,
@@ -49,62 +43,58 @@ export const BoardItem: FC<BoardItemProps> = ({
 
   const isActive = activeChainId === item?.chainId;
   const isHovered = hoveredId === item?.chainId;
-  const isSelected = selected?.itemId === item?.itemId;
-  const isLastSelected = lastSelected?.itemId === item?.itemId;
 
   const itemClasses = useMemo(
-    () => generateItemClasses(isActive, isHovered, isSelected, isLastSelected),
-    [hoveredId, activeChainId, selected, lastSelected],
+    () =>
+      cn(
+        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden',
+        isActive && 'bg-emerald-600 dark:bg-emerald-800',
+        isHovered && 'bg-orange-500 dark:bg-orange-700',
+      ),
+    [isActive, isHovered],
   );
 
   return (
-    <div className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded max-w-[80px]">
-      <motion.div
-        draggable={!!item?.itemType}
-        layout
-        onClick={() => handleClick(item)}
-        onDragStart={handleOnDragStart}
-        onDragOver={(e) => handleOnDragOver(e, item.chainId)}
-        onDragLeave={handleOnDragLeave}
-        onDrop={onHandleOnDrop}
-        className={itemClasses}
-      >
-        {item.itemType ? (
-          <div className="relative">
-            {!isSelected && (
-              <BoardItemBadge
-                pausedUntil={item.pausedUntil}
-                itemLevel={item.itemLevel}
-              />
+    <div className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded lg:w-[90px]">
+      <Dialog>
+        <motion.div
+          draggable={!!item?.itemType}
+          layout
+          onDragStart={handleOnDragStart}
+          onDragOver={(e) => handleOnDragOver(e, item.chainId)}
+          onDragLeave={handleOnDragLeave}
+          onDrop={onHandleOnDrop}
+          className={itemClasses}
+        >
+          <DialogTrigger>
+            {item.itemType ? (
+              <>
+                <BoardItemBadge
+                  pausedUntil={item.pausedUntil}
+                  itemLevel={item.itemLevel}
+                />
+                <BoardItemImage
+                  icon={item.icon || ''}
+                  chainId={item.chainId}
+                  isInsideBubble={item.isInsideBubble}
+                />
+              </>
+            ) : (
+              <div className={cn('flex justify-center')}>
+                <PlusSquare size={32} />
+              </div>
             )}
-            <BoardItemImage
-              icon={item.icon || ''}
-              isSelected={isSelected}
-              chainId={item.chainId}
-              isInsideBubble={item.isInsideBubble}
-            />
-          </div>
-        ) : (
-          <div
-            className={cn(
-              'flex justify-center',
-              !isSelected
-                ? ` items-center w-full h-full bg-transparent
-                    text-background text-zinc-800 hover:opacity-45 transition-opacity duration-300`
-                : '',
-            )}
-          >
-            <PlusSquare size={32} />
-          </div>
-        )}
+          </DialogTrigger>
+        </motion.div>
 
-        {isSelected &&
-          (item.itemType ? (
+        <DialogContent>
+          {item.itemType ? (
             <BoardItemEdit item={item} />
           ) : (
             <BoardItemAdd index={index} />
-          ))}
-      </motion.div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
