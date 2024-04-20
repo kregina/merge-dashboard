@@ -5,8 +5,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Separator,
 } from '@/components';
-import { Item, updateBoard } from '@/services/board';
+import { Item, addItemToBoard } from '@/services/board';
 import { itemsToBeAdded } from '@/services/data/itemsTobeAdded';
 import { useMutation } from '@tanstack/react-query';
 import { Save } from 'lucide-react';
@@ -36,7 +37,7 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ index }) => {
 
   const mutation = useMutation({
     mutationFn: (itemTobeAdded: Item) =>
-      updateBoard({
+      addItemToBoard({
         boardItems: boardContext.boardItems,
         index: index,
         newItem: itemTobeAdded,
@@ -62,8 +63,10 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ index }) => {
         </SelectContent>
       </Select>
 
+      <Separator />
+
       <div className="flex justify-end">
-        <Button variant="ghost" onClick={handleOnValueChange}>
+        <Button onClick={handleOnValueChange}>
           <Save className="mr-4" />
           Add Item
         </Button>

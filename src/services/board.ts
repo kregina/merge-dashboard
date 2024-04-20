@@ -35,13 +35,13 @@ export const fetchBoard = async () => {
   return data;
 };
 
-export interface UpdateBoardProps {
+export interface AddItemToBoardProps {
   index: number;
   newItem: Item;
   boardItems: Array<Item | null>;
 }
 
-export const updateBoard = async (options: UpdateBoardProps) => {
+export const addItemToBoard = async (options: AddItemToBoardProps) => {
   const { index, newItem, boardItems } = options;
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -52,6 +52,25 @@ export const updateBoard = async (options: UpdateBoardProps) => {
     { ...newItem, itemId: boardItems[index]?.itemId },
     ...boardItems.slice(index + 1),
   ] as Array<Item | null>;
+
+  return newBoard;
+};
+
+interface updateItemOfBoardProps {
+  updatedItem: Item;
+  boardItems: Array<Item | null>;
+}
+
+export const updateItemToBoard = async (options: updateItemOfBoardProps) => {
+  const { updatedItem, boardItems } = options;
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const newBoard = [
+    ...boardItems.map((item) =>
+      item?.itemId === updatedItem.itemId ? updatedItem : item,
+    ),
+  ];
 
   return newBoard;
 };

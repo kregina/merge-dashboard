@@ -57,7 +57,7 @@ export const BoardItem: FC<BoardItemProps> = (props) => {
     isActive ? 'bg-emerald-600 dark:bg-emerald-800' : '',
     isHovered ? 'bg-orange-500 dark:bg-orange-700' : '',
     isSelected
-      ? `rounded-lg cursor-default absolute inset-0 h-[30%] w-full 
+      ? `rounded-lg cursor-default absolute inset-0 h-full lg:max-h-[40%] w-full 
         md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col`
       : isLastSelected
         ? 'z-40 rounded-xl h-full w-full'
