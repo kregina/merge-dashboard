@@ -3,28 +3,29 @@ import { Board, Item } from '@/services';
 import { useCallback, useMemo, useState } from 'react';
 import { BoardContextProps } from './BoardContext';
 
-type BoardStateUpdate = Partial<{
-  board: Board;
-  boardItems: Array<Item | null>;
+interface UseBoardGridSate {
+  boardItems: Item[];
   dragStartIndex: number | null;
   activeChainId: string | null;
   openedItem: Item | null;
   lastOpenedItem: Item | null;
-}>;
+}
 
 export function useBoardGrid(board: Board) {
-  const [boardState, setBoardState] = useState({
-    board: board,
+  const [boardState, setBoardState] = useState<UseBoardGridSate>({
     boardItems: board.items,
-    dragStartIndex: null as number | null,
-    activeChainId: null as string | null,
-    openedItem: null as Item | null,
-    lastOpenedItem: null as Item | null,
+    dragStartIndex: 0,
+    activeChainId: null,
+    openedItem: null,
+    lastOpenedItem: null,
   });
 
-  const updateBoardState = useCallback((newState: BoardStateUpdate) => {
-    setBoardState((prev) => ({ ...prev, ...newState }));
-  }, []);
+  const updateBoardState = useCallback(
+    (newState: Partial<UseBoardGridSate>) => {
+      setBoardState((prev) => ({ ...prev, ...newState }));
+    },
+    [],
+  );
 
   const handleItemClick = useCallback(
     (item: Item) => {
@@ -67,9 +68,8 @@ export function useBoardGrid(board: Board) {
   const boardContextValues: BoardContextProps = useMemo(
     () => ({
       boardItems: boardState.boardItems,
-      setBoardItems: (items: Array<Item | null>) =>
-        updateBoardState({ boardItems: items }),
-      closeItem: (openedItem: Item | null) => updateBoardState({ openedItem }),
+      setBoardItems: (items: Item[]) => updateBoardState({ boardItems: items }),
+      closeItem: (openedItem: Item) => updateBoardState({ openedItem }),
     }),
     [boardState.boardItems, updateBoardState],
   );

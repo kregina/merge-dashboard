@@ -8,21 +8,21 @@ export enum ItemVisibility {
 
 export interface Item {
   itemId: string;
-  itemType: string;
-  chainId: string;
+  itemType: string | null;
+  chainId: string | null;
   pausedUntil: string | null;
-  createdAt: string;
+  createdAt: string | null;
   visibility: ItemVisibility | string | null;
   itemLevel: number | null;
-  isInsideBubble: boolean;
-  icon: string;
+  isInsideBubble: boolean | null;
+  icon: string | null;
 }
 
 export interface Board {
   width: number;
   height: number;
   boardId: string;
-  items: Array<Item | null>;
+  items: Item[];
 }
 
 // Helper function for delay
@@ -46,12 +46,12 @@ export const fetchBoard = async (): Promise<Board> => {
 export interface AddItemToBoardProps {
   index: number;
   newItem: Item;
-  boardItems: Array<Item | null>;
+  boardItems: Item[];
 }
 
 export const addItemToBoard = async (
   options: AddItemToBoardProps,
-): Promise<Array<Item | null>> => {
+): Promise<Item[]> => {
   await delay(1000);
   const { index, newItem, boardItems } = options;
 
@@ -64,12 +64,12 @@ export const addItemToBoard = async (
 
 interface UpdateItemOfBoardProps {
   updatedItem: Item;
-  boardItems: Array<Item | null>;
+  boardItems: Item[];
 }
 
 export const updateItemToBoard = async (
   options: UpdateItemOfBoardProps,
-): Promise<Array<Item | null>> => {
+): Promise<Item[]> => {
   await delay(1000);
 
   const { updatedItem, boardItems } = options;
@@ -81,13 +81,13 @@ export const updateItemToBoard = async (
 
 interface DeleteItemOfBoardProps {
   itemId: string;
-  boardItems: Array<Item | null>;
+  boardItems: Item[];
   index: number;
 }
 
 export const deleteItemFromBoard = async (
   options: DeleteItemOfBoardProps,
-): Promise<Array<Item | null>> => {
+): Promise<Item[]> => {
   const { itemId, boardItems, index } = options;
   await delay(1000);
 

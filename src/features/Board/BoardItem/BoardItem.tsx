@@ -10,7 +10,7 @@ import { BoardItemSelected } from './BoardItemSelected';
 import { useBoardItem } from './useBoardItem';
 
 interface BoardItemProps {
-  item: Item | null;
+  item: Item;
   index: number;
   activeChainId: string | null;
   setDragStartIndex: (index: number) => void;
@@ -58,7 +58,7 @@ export const BoardItem: FC<BoardItemProps> = ({
         isActive && 'bg-emerald-600 dark:bg-emerald-800',
         isHovered && 'bg-orange-500 dark:bg-orange-700',
         isSelected
-          ? 'rounded-lg cursor-default absolute inset-0 h-full lg:max-h-[40%] w-full md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col'
+          ? 'bg-background rounded-lg cursor-default absolute inset-0 h-full lg:max-h-[40%] w-full md:w-[40%] m-auto z-50 flex justify-center items-center flex-wrap flex-col'
           : 'rounded-xl h-full w-full',
         isLastSelected && 'z-40',
       ),
@@ -77,7 +77,7 @@ export const BoardItem: FC<BoardItemProps> = ({
         onDrop={onHandleOnDrop}
         className={itemClasses}
       >
-        {item?.itemType ? (
+        {item.icon ? (
           <div className="relative">
             {!isSelected && (
               <BoardItemBadge
@@ -89,7 +89,7 @@ export const BoardItem: FC<BoardItemProps> = ({
             <BoardItemImage
               icon={item.icon}
               isSelected={isSelected}
-              chainId={item.chainId}
+              chainId={item?.chainId}
               isInsideBubble={item.isInsideBubble}
             />
           </div>

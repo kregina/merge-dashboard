@@ -5,8 +5,8 @@ import { FC } from 'react';
 interface BoardItemImageProps {
   icon: string;
   isSelected: boolean;
-  chainId: string;
-  isInsideBubble?: boolean;
+  chainId: string | null;
+  isInsideBubble: boolean | null;
 }
 
 export const BoardItemImage: FC<BoardItemImageProps> = ({
