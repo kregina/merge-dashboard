@@ -17,15 +17,6 @@ export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({
       <motion.div
         initial={{
           opacity: 0,
-        }}
-        animate={{
-          opacity: 0.6,
-        }}
-        className="absolute inset-0 h-full w-full opacity-60 z-10"
-      />
-      <motion.div
-        initial={{
-          opacity: 0,
           y: 100,
         }}
         animate={{
@@ -36,7 +27,7 @@ export const BoardSelectedItem: FC<BoardSelectedItemProps> = ({
           duration: 0.3,
           ease: 'easeInOut',
         }}
-        className="relative px-8 pb-4 z-[70] h-full"
+        className="px-8 pb-4 z-[70] h-full"
       >
         {item?.itemType ? (
           <BoardItemEdit item={item} />

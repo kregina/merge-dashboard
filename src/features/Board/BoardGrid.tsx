@@ -24,7 +24,7 @@ export const BoardGrid: FC<BoardGridProps> = ({ board }) => {
 
   return (
     <BoardProvider value={boardContextValues}>
-      <div className="max-w-[1000px]">
+      <div className="max-w-[800px] m-auto">
         <Card>
           <div
             className="w-full h-full grid max-w-7xl mx-auto"
