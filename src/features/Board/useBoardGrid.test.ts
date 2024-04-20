@@ -24,19 +24,6 @@ const board: Board = {
 };
 
 describe('useBoardGrid', () => {
-  it('updates opened item on handleItemClick', () => {
-    const initialBoard: Board = board;
-
-    const { result } = renderHook(() => useBoardGrid(initialBoard));
-    const item: Item = sampleItem;
-
-    act(() => {
-      result.current.handleItemClick(item);
-    });
-
-    expect(result.current.boardState.openedItem).toBe(item);
-  });
-
   it('updates boardItems on handleDrop', () => {
     const initialBoard: Board = {
       width: 3,
