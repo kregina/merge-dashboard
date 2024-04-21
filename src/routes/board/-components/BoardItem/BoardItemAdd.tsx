@@ -14,10 +14,7 @@ interface BoardItemAddProps {
   setSelectedItemId: (itemId: string) => void;
 }
 
-export const BoardItemAdd: FC<BoardItemAddProps> = ({
-  index,
-  setSelectedItemId,
-}) => {
+export const BoardItemAdd: FC<BoardItemAddProps> = ({ setSelectedItemId }) => {
   return (
     <CardContent className="mt-4">
       <Select onValueChange={setSelectedItemId}>
