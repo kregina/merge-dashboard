@@ -23,9 +23,11 @@ function BoardComponent() {
   const board = boardQuery.data;
 
   const [boardItems, setBoardItems] = useState(board.items);
-  const [draggingIndex, setDraggingIndex] = useState(-1);
-  const [draggingOverIndex, setDraggingOverIndex] = useState(-1);
-  const [editingIndex, setEditingIndex] = useState(-1);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  const [draggingOverIndex, setDraggingOverIndex] = useState<number | null>(
+    null,
+  );
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   // const isHovered = hoveredId === item?.chainId;
 
@@ -53,17 +55,21 @@ function BoardComponent() {
 
   const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const swappedArray = swapArrayItems(
-      board.items,
-      draggingIndex,
-      draggingOverIndex,
-    );
-    setBoardItems(swappedArray);
+    if (draggingIndex && draggingOverIndex) {
+      const swappedArray = swapArrayItems(
+        boardItems,
+        draggingIndex,
+        draggingOverIndex,
+      );
+      setBoardItems(swappedArray);
+    }
+    setDraggingIndex(null);
+    setDraggingOverIndex(null);
   };
 
   const onAddItem = (addedItem: Item, index: number) => {
     if (addedItem) {
-      const updatedItems = board.items.map((item, i) => {
+      const updatedItems = boardItems.map((item, i) => {
         if (i === index) {
           return addedItem;
         }
@@ -72,6 +78,7 @@ function BoardComponent() {
 
       setBoardItems(updatedItems);
     }
+    setEditingIndex(null);
   };
 
   const onDelete = (itemId: string, index: number) => {
@@ -80,7 +87,7 @@ function BoardComponent() {
         itemId: itemId,
       } as Item;
 
-      const updatedItems = board.items.map((item, i) => {
+      const updatedItems = boardItems.map((item, i) => {
         if (i === index) {
           return emptyItem;
         }
@@ -88,12 +95,13 @@ function BoardComponent() {
       });
 
       setBoardItems(updatedItems);
+      setEditingIndex(null);
     }
   };
 
   const onUpdate = (updatedItem: Item) => {
     if (updatedItem) {
-      const newItems = board.items.map((item) =>
+      const newItems = boardItems.map((item) =>
         item?.itemId === updatedItem.itemId ? updatedItem : item,
       );
       setBoardItems(
@@ -105,6 +113,7 @@ function BoardComponent() {
         }),
       );
     }
+    setEditingIndex(null);
   };
 
   return (
