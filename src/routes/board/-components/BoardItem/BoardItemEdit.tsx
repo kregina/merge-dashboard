@@ -2,53 +2,63 @@ import {
   Badge,
   Button,
   CardContent,
+  CardFooter,
   CardHeader,
   Input,
   Label,
   Separator,
 } from '@/components';
 import { Item, ItemVisibility } from '@/services';
-import { Eye, EyeOff, Play, Trash } from 'lucide-react';
-import { FC, useMemo } from 'react';
+import { format } from 'date-fns';
+import { Eye, EyeOff, Play, Save, Trash } from 'lucide-react';
+import { FC, useMemo, useState } from 'react';
 import { BoardItemImage } from './BoardItemImage';
 
 interface BoardItemEditProps {
   item: Item;
-  isPausedUntil: string | null;
-  onDelete: () => void;
-  onToggleVisibility: () => void;
-  onChangeLevel: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onUnpause: () => void;
+  setOnSaveItem: (item: Item) => void;
+  setDeleteItem: (item: Item) => void;
 }
 
 export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
-  const {
-    item,
-    isPausedUntil,
-    onDelete,
-    onToggleVisibility,
-    onChangeLevel,
-    onUnpause,
-  } = props;
+  const { item, setOnSaveItem, setDeleteItem } = props;
+
+  const [currentItem, setCurrentItem] = useState(item);
+
+  const isPausedUntil = currentItem.pausedUntil
+    ? format(new Date(currentItem.pausedUntil), 'MM/dd/yyyy hh:mm a')
+    : null;
 
   const fieldWrapperClasses = useMemo(
     () => 'flex items-center space-x-2 justify-between mb-4',
     [item],
   );
 
+  const handleUpdateItem = (updatedItemProps: Partial<Item>) => {
+    setCurrentItem({ ...currentItem, ...updatedItemProps });
+  };
+
+  const handleOnSave = () => {
+    setOnSaveItem(currentItem);
+  };
+
   return (
     <>
       <CardHeader>
         <h1 className="text-lg flex justify-between mb-4">
-          {item?.chainId}
+          {currentItem.chainId}
           <div>
-            {item?.isInsideBubble && (
+            {currentItem.isInsideBubble && (
               <Badge className="mr-4 bg-teal-600 dark:bg-teal-300">
                 Inside Bubble
               </Badge>
             )}
 
-            <Button variant="destructive" className="border" onClick={onDelete}>
+            <Button
+              variant="destructive"
+              className="border"
+              onClick={() => setDeleteItem(item)}
+            >
               <Trash className=" h-4 w-4" />
             </Button>
           </div>
@@ -59,9 +69,9 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
       <CardContent className="flex flex-col justify-center">
         <div className="relative self-center">
           <BoardItemImage
-            chainId={item?.chainId}
+            chainId={currentItem.chainId}
             icon={item.icon || ''}
-            isInsideBubble={item?.isInsideBubble}
+            isInsideBubble={currentItem.isInsideBubble}
           />
         </div>
         <div>
@@ -70,27 +80,37 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
             <Input
               id="level"
               type="number"
-              defaultValue={item?.itemLevel || 1}
+              defaultValue={currentItem.itemLevel || 1}
               min={1}
               max={50}
               className="w-auto text-center"
-              onChange={onChangeLevel}
+              onChange={(e) => handleUpdateItem({ itemLevel: +e.target.value })}
             />
           </div>
 
           <div className={fieldWrapperClasses}>
             <p>
               Item is
-              <span className="text-orange-500"> {item?.visibility}</span> to
-              the player.
+              <span className="text-orange-500">
+                {' '}
+                {currentItem.visibility}
+              </span>{' '}
+              to the player.
             </p>
 
             <Button
               variant="ghost"
               className="border"
-              onClick={onToggleVisibility}
+              onClick={() => {
+                handleUpdateItem({
+                  visibility:
+                    currentItem.visibility === ItemVisibility.VISIBLE
+                      ? ItemVisibility.HIDDEN
+                      : ItemVisibility.VISIBLE,
+                });
+              }}
             >
-              {item?.visibility === ItemVisibility.VISIBLE ? (
+              {currentItem.visibility === ItemVisibility.VISIBLE ? (
                 <Eye className="mr-2 h-4 w-4" />
               ) : (
                 <EyeOff className="mr-2 h-4 w-4" />
@@ -108,7 +128,11 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
                 </span>
               </p>
 
-              <Button variant="ghost" className="border" onClick={onUnpause}>
+              <Button
+                variant="ghost"
+                className="border"
+                onClick={() => handleUpdateItem({ pausedUntil: null })}
+              >
                 <Play className="mr-2 h-4 w-4" />
                 Unpause
               </Button>
@@ -117,6 +141,13 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
         </div>
         <Separator />
       </CardContent>
+
+      <CardFooter className="justify-end">
+        <Button onClick={handleOnSave}>
+          <Save className="mr-3" />
+          Update Item
+        </Button>
+      </CardFooter>
     </>
   );
 };

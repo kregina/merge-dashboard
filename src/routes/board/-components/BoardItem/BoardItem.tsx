@@ -1,4 +1,3 @@
-import { Dialog } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { PlusSquare } from 'lucide-react';
@@ -8,14 +7,13 @@ import { BoardItemImage } from './BoardItemImage';
 
 interface BoardItemProps {
   item: Item;
-  setIsModalOpen: (isOpen: boolean) => void;
 }
 
-export const BoardItem: FC<BoardItemProps> = ({ item, setIsModalOpen }) => {
+export const BoardItem: FC<BoardItemProps> = ({ item }) => {
   // const isActive = activeChainId === item?.chainId;
 
   return (
-    <Dialog onOpenChange={setIsModalOpen}>
+    <>
       {item.itemType ? (
         <>
           <BoardItemBadge
@@ -37,6 +35,6 @@ export const BoardItem: FC<BoardItemProps> = ({ item, setIsModalOpen }) => {
           <PlusSquare size={32} />
         </div>
       )}
-    </Dialog>
+    </>
   );
 };

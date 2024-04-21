@@ -1,34 +1,57 @@
 import {
+  Button,
   CardContent,
+  CardFooter,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components';
+import { Item } from '@/services';
 import { itemsToBeAdded } from '@/services/data/itemsTobeAdded';
-import { FC } from 'react';
+import { Save } from 'lucide-react';
+import { FC, useState } from 'react';
 
 interface BoardItemAddProps {
-  index: number;
-  setSelectedItemId: (itemId: string) => void;
+  setAddedItem: (item: Item) => void;
 }
 
-export const BoardItemAdd: FC<BoardItemAddProps> = ({ setSelectedItemId }) => {
+export const BoardItemAdd: FC<BoardItemAddProps> = ({ setAddedItem }) => {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleOnAdd = () => {
+    const itemTobeAdded = itemsToBeAdded.find(
+      (item) => item.itemId === selectedId,
+    );
+
+    if (itemTobeAdded) {
+      setAddedItem(itemTobeAdded);
+    }
+  };
+
   return (
-    <CardContent className="mt-4">
-      <Select onValueChange={setSelectedItemId}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Choose an item" />
-        </SelectTrigger>
-        <SelectContent className="group-disabled:opacity-50">
-          {itemsToBeAdded.map((item) => (
-            <SelectItem key={item.itemId} value={item.itemId}>
-              {item.itemType}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </CardContent>
+    <>
+      <CardContent className="mt-4">
+        <Select onValueChange={setSelectedId}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Choose an item" />
+          </SelectTrigger>
+          <SelectContent>
+            {itemsToBeAdded.map((item) => (
+              <SelectItem key={item.itemId} value={item.itemId}>
+                {item.itemType}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </CardContent>
+      <CardFooter className="justify-end">
+        <Button onClick={handleOnAdd}>
+          <Save className="mr-3" />
+          Add Item
+        </Button>
+      </CardFooter>
+    </>
   );
 };
