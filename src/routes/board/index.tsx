@@ -23,11 +23,9 @@ function BoardComponent() {
   const board = boardQuery.data;
 
   const [boardItems, setBoardItems] = useState(board.items);
-  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-  const [draggingOverIndex, setDraggingOverIndex] = useState<number | null>(
-    null,
-  );
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [draggingIndex, setDraggingIndex] = useState(-1);
+  const [draggingOverIndex, setDraggingOverIndex] = useState(-1);
+  const [editingIndex, setEditingIndex] = useState(-1);
 
   // const isHovered = hoveredId === item?.chainId;
 
@@ -63,8 +61,8 @@ function BoardComponent() {
       );
       setBoardItems(swappedArray);
     }
-    setDraggingIndex(null);
-    setDraggingOverIndex(null);
+    setDraggingIndex(-1);
+    setDraggingOverIndex(-1);
   };
 
   const onAddItem = (addedItem: Item, index: number) => {
@@ -78,7 +76,7 @@ function BoardComponent() {
 
       setBoardItems(updatedItems);
     }
-    setEditingIndex(null);
+    setEditingIndex(-1);
   };
 
   const onDelete = (itemId: string, index: number) => {
@@ -95,7 +93,7 @@ function BoardComponent() {
       });
 
       setBoardItems(updatedItems);
-      setEditingIndex(null);
+      setEditingIndex(-1);
     }
   };
 
@@ -113,7 +111,7 @@ function BoardComponent() {
         }),
       );
     }
-    setEditingIndex(null);
+    setEditingIndex(-1);
   };
 
   return (
@@ -124,7 +122,14 @@ function BoardComponent() {
             key={item.itemId}
             className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded lg:w-[90px]"
           >
-            <Dialog open={editingIndex === index}>
+            <Dialog
+              open={editingIndex === index}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) {
+                  setEditingIndex(-1);
+                }
+              }}
+            >
               <motion.div
                 draggable={!!item?.itemType}
                 layout
