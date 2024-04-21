@@ -1,6 +1,7 @@
 import {
   Badge,
   Button,
+  Card,
   CardContent,
   CardFooter,
   CardHeader,
@@ -43,7 +44,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
   };
 
   return (
-    <>
+    <Card>
       <CardHeader>
         <h1 className="text-lg flex justify-between mb-4">
           {currentItem.chainId}
@@ -148,6 +149,6 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
           Update Item
         </Button>
       </CardFooter>
-    </>
+    </Card>
   );
 };

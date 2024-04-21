@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   CardContent,
   CardFooter,
   Select,
@@ -31,7 +32,7 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ setAddedItem }) => {
   };
 
   return (
-    <>
+    <Card>
       <CardContent className="mt-4">
         <Select onValueChange={setSelectedId}>
           <SelectTrigger className="w-full">
@@ -52,6 +53,6 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ setAddedItem }) => {
           Add Item
         </Button>
       </CardFooter>
-    </>
+    </Card>
   );
 };
