@@ -17,9 +17,13 @@ import { useBoardItemEdit } from './useBoardItemEdit';
 
 interface BoardItemEditProps {
   item: Item;
+  setIsModalOpen: (isOpen: boolean) => void;
 }
 
-export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
+export const BoardItemEdit: FC<BoardItemEditProps> = ({
+  item,
+  setIsModalOpen,
+}) => {
   const {
     currentItem,
     isPausedUntil,
@@ -28,7 +32,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({ item }) => {
     onUnpause,
     onDelete,
     mutationUpdate,
-  } = useBoardItemEdit({ item });
+  } = useBoardItemEdit({ item, setIsModalOpen });
 
   const fieldWrapperClasses = useMemo(
     () => 'flex items-center space-x-2 justify-between mb-4',

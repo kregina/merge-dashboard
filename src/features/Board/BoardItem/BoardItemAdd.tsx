@@ -18,9 +18,13 @@ import { BoardContext } from '../BoardContext';
 
 interface BoardItemAddProps {
   index: number;
+  setIsModalOpen: (isOpen: boolean) => void;
 }
 
-export const BoardItemAdd: FC<BoardItemAddProps> = ({ index }) => {
+export const BoardItemAdd: FC<BoardItemAddProps> = ({
+  index,
+  setIsModalOpen,
+}) => {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const boardContext = useContext(BoardContext);
@@ -46,7 +50,7 @@ export const BoardItemAdd: FC<BoardItemAddProps> = ({ index }) => {
       }),
     onSuccess: (data) => {
       boardContext.setBoardItems(data);
-      boardContext.closeItem(null);
+      setIsModalOpen(false);
     },
   });
 

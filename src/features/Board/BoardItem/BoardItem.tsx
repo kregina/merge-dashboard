@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { motion } from 'framer-motion';
 import { PlusSquare } from 'lucide-react';
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { BoardItemAdd } from './BoardItemAdd';
 import { BoardItemBadge } from './BoardItemBadge';
 import { BoardItemEdit } from './BoardItemEdit';
@@ -40,6 +40,7 @@ export const BoardItem: FC<BoardItemProps> = ({
     handleDrop,
     index,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isActive = activeChainId === item?.chainId;
   const isHovered = hoveredId === item?.chainId;
@@ -47,7 +48,7 @@ export const BoardItem: FC<BoardItemProps> = ({
   const itemClasses = useMemo(
     () =>
       cn(
-        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden',
+        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden h-full',
         isActive && 'bg-emerald-600 dark:bg-emerald-800',
         isHovered && 'bg-orange-500 dark:bg-orange-700',
       ),
@@ -56,7 +57,7 @@ export const BoardItem: FC<BoardItemProps> = ({
 
   return (
     <div className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded lg:w-[90px]">
-      <Dialog>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <motion.div
           draggable={!!item?.itemType}
           layout
@@ -66,7 +67,7 @@ export const BoardItem: FC<BoardItemProps> = ({
           onDrop={onHandleOnDrop}
           className={itemClasses}
         >
-          <DialogTrigger>
+          <DialogTrigger className="w-full h-full">
             {item.itemType ? (
               <>
                 <BoardItemBadge
@@ -80,7 +81,7 @@ export const BoardItem: FC<BoardItemProps> = ({
                 />
               </>
             ) : (
-              <div className={cn('flex justify-center')}>
+              <div className={cn('flex justify-center text-zinc-800')}>
                 <PlusSquare size={32} />
               </div>
             )}
@@ -89,9 +90,9 @@ export const BoardItem: FC<BoardItemProps> = ({
 
         <DialogContent>
           {item.itemType ? (
-            <BoardItemEdit item={item} />
+            <BoardItemEdit item={item} setIsModalOpen={setIsModalOpen} />
           ) : (
-            <BoardItemAdd index={index} />
+            <BoardItemAdd index={index} setIsModalOpen={setIsModalOpen} />
           )}
         </DialogContent>
       </Dialog>

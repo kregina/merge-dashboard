@@ -29,7 +29,7 @@ export const BoardItemBadge: FC<BoardItemBadgeProps> = ({
       {isPausedUntil && (
         <Tooltip>
           <TooltipTrigger>
-            <Badge className="bg-orange-400 size-5 p-0 justify-center text-zinc-800">
+            <Badge className="bg-emerald-500 size-5 p-0 justify-center text-zinc-800">
               <Timer />
             </Badge>
           </TooltipTrigger>

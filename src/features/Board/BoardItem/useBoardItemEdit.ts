@@ -9,7 +9,13 @@ import { format } from 'date-fns';
 import { useContext, useState } from 'react';
 import { BoardContext } from '../BoardContext';
 
-export const useBoardItemEdit = ({ item }: { item: Item }) => {
+interface UseBoardItemEditProps {
+  item: Item;
+  setIsModalOpen: (isOpen: boolean) => void;
+}
+
+export const useBoardItemEdit = (props: UseBoardItemEditProps) => {
+  const { item, setIsModalOpen } = props;
   const [currentItem, setCurrentItem] = useState<Item>(item);
 
   const isPausedUntil = currentItem?.pausedUntil
@@ -31,7 +37,7 @@ export const useBoardItemEdit = ({ item }: { item: Item }) => {
 
     onSuccess: (data) => {
       boardContext.setBoardItems(data);
-      boardContext.closeItem(null);
+      setIsModalOpen(false);
     },
   });
 
@@ -47,7 +53,7 @@ export const useBoardItemEdit = ({ item }: { item: Item }) => {
 
     onSuccess: (data) => {
       boardContext.setBoardItems(data);
-      boardContext.closeItem(null);
+      setIsModalOpen(false);
     },
   });
 
