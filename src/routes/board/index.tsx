@@ -1,12 +1,10 @@
 import { Card, Dialog, DialogContent } from '@/components';
 import { swapArrayItems } from '@/lib/swapArrayItems';
-import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
-import { BoardGrid } from './-components/BoardGrid';
+import { useState } from 'react';
+import { BoardDragAndDrop } from './-components/BoardDragAndDrop';
 import { BoardItem } from './-components/BoardItem/BoardItem';
 import { BoardItemAdd } from './-components/BoardItem/BoardItemAdd';
 import { BoardItemEdit } from './-components/BoardItem/BoardItemEdit';
@@ -23,46 +21,12 @@ function BoardComponent() {
   const board = boardQuery.data;
 
   const [boardItems, setBoardItems] = useState(board.items);
-  const [dragSourceIndex, setDragSourceIndex] = useState(-1);
-  const [dragTargetIndex, setDragTargetIndex] = useState(-1);
   const [editingIndex, setEditingIndex] = useState(-1);
 
-  // const isHovered = hoveredId === item?.chainId;
-
-  const itemClasses = useMemo(
-    () =>
-      cn(
-        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden h-full',
-        // isActive && 'bg-emerald-600 dark:bg-emerald-800',
-        // isHovered && 'bg-orange-500 dark:bg-orange-700',
-      ),
-    [],
-  );
-
-  const handleOnDragStart = (index: number) => {
-    setDragSourceIndex(index);
-  };
-
-  const handleOnDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number,
-  ) => {
-    e.preventDefault();
-    setDragTargetIndex(index);
-  };
-
-  const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    const swappedArray = swapArrayItems(
-      boardItems,
-      dragSourceIndex,
-      dragTargetIndex,
-    );
+  const handleSwappedItems = (sourceIndex: number, targetIndex: number) => {
+    const swappedArray = swapArrayItems(boardItems, sourceIndex, targetIndex);
 
     setBoardItems(swappedArray);
-    setDragSourceIndex(-1);
-    setDragTargetIndex(-1);
   };
 
   const handleAddItem = (addedItem: Item, index: number) => {
@@ -103,54 +67,45 @@ function BoardComponent() {
 
   return (
     <div className="m-auto">
-      <BoardGrid board={board}>
-        {boardItems.map((item, index) => (
-          <div
+      <BoardDragAndDrop
+        height={board.height}
+        width={board.width}
+        items={boardItems}
+        handleSwappedItems={handleSwappedItems}
+        renderItems={(item, index) => (
+          <Dialog
             key={item.itemId}
-            className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded lg:w-[90px]"
+            open={editingIndex === index}
+            onOpenChange={(isOpen) => {
+              if (!isOpen) {
+                setEditingIndex(-1);
+              }
+            }}
           >
-            <Dialog
-              open={editingIndex === index}
-              onOpenChange={(isOpen) => {
-                if (!isOpen) {
-                  setEditingIndex(-1);
-                }
-              }}
-            >
-              <motion.div
-                draggable={!!item?.itemType}
-                layout
-                className={cn(itemClasses)}
-                onDrop={handleOnDrop}
-                onDragStart={() => handleOnDragStart(index)}
-                onDragOver={(e) => handleOnDragOver(e, index)}
-              >
-                <BoardItem item={item} onClick={() => setEditingIndex(index)} />
-              </motion.div>
+            <BoardItem item={item} onClick={() => setEditingIndex(index)} />
 
-              <DialogContent>
-                <Card>
-                  {item.itemType ? (
-                    <BoardItemEdit
-                      item={item}
-                      setDeleteItem={(item) =>
-                        handleDeleteItem(item.itemId, index)
-                      }
-                      setOnSaveItem={(item) => handleUpdateItem(item)}
-                    />
-                  ) : (
-                    <BoardItemAdd
-                      setAddedItem={(addedItem) =>
-                        handleAddItem(addedItem, index)
-                      }
-                    />
-                  )}
-                </Card>
-              </DialogContent>
-            </Dialog>
-          </div>
-        ))}
-      </BoardGrid>
+            <DialogContent>
+              <Card>
+                {item.itemType ? (
+                  <BoardItemEdit
+                    item={item}
+                    setDeleteItem={(item) =>
+                      handleDeleteItem(item.itemId, index)
+                    }
+                    setOnSaveItem={(item) => handleUpdateItem(item)}
+                  />
+                ) : (
+                  <BoardItemAdd
+                    setAddedItem={(addedItem) =>
+                      handleAddItem(addedItem, index)
+                    }
+                  />
+                )}
+              </Card>
+            </DialogContent>
+          </Dialog>
+        )}
+      ></BoardDragAndDrop>
     </div>
   );
 }
