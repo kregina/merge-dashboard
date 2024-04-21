@@ -125,14 +125,7 @@ function BoardComponent() {
                 onDragStart={() => handleOnDragStart(index)}
                 onDragOver={(e) => handleOnDragOver(e, index)}
               >
-                <div
-                  className="h-full w-full "
-                  onClick={() => {
-                    setEditingIndex(index);
-                  }}
-                >
-                  <BoardItem item={item} />
-                </div>
+                <BoardItem item={item} onClick={() => setEditingIndex(index)} />
               </motion.div>
 
               <DialogContent>

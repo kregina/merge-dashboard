@@ -7,13 +7,14 @@ import { BoardItemImage } from './BoardItemImage';
 
 interface BoardItemProps {
   item: Item;
+  onClick: () => void;
 }
 
-export const BoardItem: FC<BoardItemProps> = ({ item }) => {
+export const BoardItem: FC<BoardItemProps> = ({ item, onClick }) => {
   // const isActive = activeChainId === item?.chainId;
 
   return (
-    <>
+    <div className="h-full w-full " onClick={onClick}>
       {item.itemType ? (
         <>
           <BoardItemBadge
@@ -35,6 +36,6 @@ export const BoardItem: FC<BoardItemProps> = ({ item }) => {
           <PlusSquare size={32} />
         </div>
       )}
-    </>
+    </div>
   );
 };
