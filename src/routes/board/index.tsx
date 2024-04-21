@@ -53,14 +53,14 @@ function BoardComponent() {
 
   const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (dragSourceIndex && dragTargetIndex) {
-      const swappedArray = swapArrayItems(
-        boardItems,
-        dragSourceIndex,
-        dragTargetIndex,
-      );
-      setBoardItems(swappedArray);
-    }
+
+    const swappedArray = swapArrayItems(
+      boardItems,
+      dragSourceIndex,
+      dragTargetIndex,
+    );
+
+    setBoardItems(swappedArray);
     setDragSourceIndex(-1);
     setDragTargetIndex(-1);
   };
