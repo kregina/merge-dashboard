@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTrigger } from '@/components';
+import { Dialog, DialogContent } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { motion } from 'framer-motion';
@@ -66,7 +66,7 @@ export const BoardItem: FC<BoardItemProps> = ({
           onDrop={onHandleOnDrop}
           className={itemClasses}
         >
-          <DialogTrigger className="w-full h-full">
+          <div onClick={() => setIsModalOpen(true)} className="w-full h-full">
             {item.itemType ? (
               <>
                 <BoardItemBadge
@@ -80,11 +80,15 @@ export const BoardItem: FC<BoardItemProps> = ({
                 />
               </>
             ) : (
-              <div className={cn('flex justify-center text-zinc-800')}>
+              <div
+                className={cn(
+                  'flex justify-center items-center text-zinc-800 w-full h-full',
+                )}
+              >
                 <PlusSquare size={32} />
               </div>
             )}
-          </DialogTrigger>
+          </div>
         </motion.div>
 
         <DialogContent>
