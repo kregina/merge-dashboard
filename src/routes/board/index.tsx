@@ -20,8 +20,9 @@ export const Route = createFileRoute('/board/')({
 
 function BoardComponent() {
   const boardQuery = useSuspenseQuery(getBoardQueryOptions);
+  const board = boardQuery.data;
 
-  const [board, setBoard] = useState(boardQuery.data);
+  const [boardItems, setBoardItems] = useState(board.items);
   const [draggingIndex, setDraggingIndex] = useState(-1);
   const [draggingOverIndex, setDraggingOverIndex] = useState(-1);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -53,19 +54,19 @@ function BoardComponent() {
       draggingIndex,
       draggingOverIndex,
     );
-    setBoard({ ...board, items: swappedArray });
+    setBoardItems(swappedArray);
   };
 
   const onAddItem = (addedItem: Item) => {
     if (addedItem) {
-      const newBoard = board.items.map((item, i) => {
+      const updatedItems = board.items.map((item, i) => {
         if (i === selectedIndex) {
           return addedItem;
         }
         return item;
       });
 
-      setBoard({ ...board, items: newBoard });
+      setBoardItems(updatedItems);
       setSelectedIndex(-1);
     }
   };
@@ -76,14 +77,14 @@ function BoardComponent() {
         itemId: itemId,
       } as Item;
 
-      const newBoard = board.items.map((item, i) => {
+      const updatedItems = board.items.map((item, i) => {
         if (i === selectedIndex) {
           return emptyItem;
         }
         return item;
       });
 
-      setBoard({ ...board, items: newBoard });
+      setBoardItems(updatedItems);
       setSelectedIndex(-1);
     }
   };
@@ -93,7 +94,14 @@ function BoardComponent() {
       const newItems = board.items.map((item) =>
         item?.itemId === updatedItem.itemId ? updatedItem : item,
       );
-      setBoard({ ...board, items: newItems });
+      setBoardItems(
+        newItems.map((item) => {
+          if (item?.itemId === updatedItem.itemId) {
+            return updatedItem;
+          }
+          return item;
+        }),
+      );
       setSelectedIndex(-1);
     }
   };
@@ -101,12 +109,15 @@ function BoardComponent() {
   return (
     <div className="m-auto">
       <BoardGrid board={board}>
-        {board.items.map((item, index) => (
+        {boardItems.map((item, index) => (
           <div
             key={item.itemId}
             className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded lg:w-[90px]"
           >
-            <Dialog open={selectedIndex === index}>
+            <Dialog
+              open={selectedIndex === index}
+              onOpenChange={() => setSelectedIndex(-1)}
+            >
               <motion.div
                 draggable={!!item?.itemType}
                 layout
