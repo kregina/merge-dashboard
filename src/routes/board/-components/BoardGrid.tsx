@@ -8,14 +8,8 @@ import {
 } from '@/components';
 import { swapArrayItems } from '@/lib/swapArrayItems';
 import { cn } from '@/lib/utils';
-import {
-  Item,
-  addItemToBoard,
-  deleteItemFromBoard,
-  updateItemToBoard,
-} from '@/services';
+import { Item } from '@/services';
 import { itemsToBeAdded } from '@/services/data/itemsTobeAdded';
-import { useMutation } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Save } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -27,11 +21,11 @@ export const BoardGrid = () => {
   const context = useBoardContext();
 
   const [board, setBoard] = useState(context.board);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [hoverIndex, setHoveredIndex] = useState(-1);
+  const [draggingIndex, setDraggingIndex] = useState(-1);
+  const [draggingHoverIndex, setDraggingHoverIndex] = useState(-1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [isFieldsetDisabled, setIsFieldsetDisabled] = useState<boolean>(false);
+  const [addedItemId, setAddedItemId] = useState<string | null>(null);
   const [updatedItem, setItemUpdated] = useState({} as Item);
 
   const gridStyle = useMemo(
@@ -55,7 +49,7 @@ export const BoardGrid = () => {
   );
 
   const handleOnDragStart = (index: number) => {
-    setSelectedIndex(index);
+    setDraggingIndex(index);
   };
 
   const handleOnDragOver = (
@@ -63,100 +57,61 @@ export const BoardGrid = () => {
     index: number,
   ) => {
     e.preventDefault();
-    setHoveredIndex(index);
+    setDraggingHoverIndex(index);
   };
 
   const handleOnDrop = () => {
-    const swappedArray = swapArrayItems(board.items, selectedIndex, hoverIndex);
+    const swappedArray = swapArrayItems(
+      board.items,
+      draggingIndex,
+      draggingHoverIndex,
+    );
     setBoard({ ...board, items: swappedArray });
   };
 
   const onAddItem = (index: number) => {
     const itemTobeAdded = itemsToBeAdded.find(
-      (item) => item.itemId === selectedItemId,
+      (item) => item.itemId === addedItemId,
     );
 
     if (itemTobeAdded) {
-      mutationAddItem.mutate({ itemTobeAdded, index });
+      setBoard((prevBoard) => {
+        const updatedItems = [
+          ...prevBoard.items.slice(0, index),
+          itemTobeAdded,
+          ...prevBoard.items.slice(index + 1),
+        ];
+        return { ...prevBoard, items: updatedItems };
+      });
+      setIsModalOpen(false);
     }
   };
 
-  const mutationAddItem = useMutation<
-    Item[],
-    Item,
-    { itemTobeAdded: Item; index: number }
-  >({
-    mutationFn: async ({ itemTobeAdded, index }) =>
-      addItemToBoard({
-        boardItems: board.items,
-        index: index,
-        newItem: itemTobeAdded,
-      }),
-    onMutate: () => {
-      setIsDisabled(true);
-    },
-    onSuccess: (data) => {
-      setBoard({ ...board, items: data });
-      setIsDisabled(false);
-      setIsModalOpen(false);
-    },
-  });
-
-  const mutationUpdate = useMutation({
-    mutationFn: (item: Item) =>
-      updateItemToBoard({
-        boardItems: board.items,
-        updatedItem: item,
-      }),
-
-    onMutate: () => {
-      setIsDisabled(true);
-    },
-    onSuccess: (data) => {
-      setBoard({ ...board, items: data });
-      setIsDisabled(false);
-    },
-    onSettled: () => {
-      setIsModalOpen(false);
-      setSelectedItemId(null);
-      setItemUpdated({} as Item);
-    },
-  });
-
-  const mutationDelete = useMutation<
-    Item[],
-    number,
-    { itemId: string; index: number }
-  >({
-    mutationFn: async ({ itemId, index }) =>
-      deleteItemFromBoard({
-        boardItems: board.items,
-        itemId: itemId,
-        index: index,
-      }),
-    onMutate: () => {
-      setIsDisabled(true);
-    },
-    onSuccess: (data) => {
-      setBoard({ ...board, items: data });
-      setIsDisabled(false);
-    },
-    onSettled: () => {
-      setIsModalOpen(false);
-      setSelectedItemId(null);
-      setItemUpdated({} as Item);
-    },
-  });
-
   const onDelete = (itemId: string, index: number) => {
     if (itemId) {
-      mutationDelete.mutate({ itemId, index });
+      const emptyItem = {
+        itemId: itemId,
+      } as Item;
+
+      const newBoard = [
+        ...board.items.slice(0, index),
+        emptyItem,
+        ...board.items.slice(index + 1),
+      ];
+
+      setBoard({ ...board, items: newBoard });
+
+      setIsModalOpen(false);
     }
   };
 
   const onUpdate = () => {
     if (updatedItem) {
-      mutationUpdate.mutate(updatedItem);
+      const newItems = board.items.map((item) =>
+        item?.itemId === updatedItem.itemId ? updatedItem : item,
+      );
+      setBoard({ ...board, items: newItems });
+      setIsModalOpen(false);
     }
   };
 
@@ -197,13 +152,13 @@ export const BoardGrid = () => {
 
                 <DialogContent>
                   <Card>
-                    <fieldset disabled={isDisabled} className="group">
+                    <fieldset disabled={isFieldsetDisabled} className="group">
                       <BoardItemContent
                         item={updatedItem}
                         index={index}
                         setItemUpdated={setItemUpdated}
                         onDelete={() => onDelete(item.itemId, index)}
-                        setSelectedItemId={setSelectedItemId}
+                        setSelectedItemId={setAddedItemId}
                       />
 
                       <CardFooter className="justify-center">
