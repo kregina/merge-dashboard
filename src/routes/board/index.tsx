@@ -1,9 +1,9 @@
-import { BoardGrid } from '@/features/Board/BoardGrid';
-import { getBoardQueryOptions } from '@/features/Board/boardQueryOptions';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import { BoardGrid } from './-components/BoardGrid';
+import { getBoardQueryOptions } from './-components/boardQueryOptions';
 
-export const Route = createFileRoute('/board')({
+export const Route = createFileRoute('/board/')({
   loader: ({ context }: { context: any }) =>
     context.queryClient.ensureQueryData(getBoardQueryOptions),
   component: BoardComponent,

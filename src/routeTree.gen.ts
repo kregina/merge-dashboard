@@ -11,18 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as BoardImport } from './routes/board'
 import { Route as IndexImport } from './routes/index'
+import { Route as BoardIndexImport } from './routes/board/index'
 
 // Create/Update Routes
 
-const BoardRoute = BoardImport.update({
-  path: '/board',
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
-  path: '/',
+const BoardIndexRoute = BoardIndexImport.update({
+  path: '/board/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -34,8 +34,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/board': {
-      preLoaderRoute: typeof BoardImport
+    '/board/': {
+      preLoaderRoute: typeof BoardIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -43,6 +43,6 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexRoute, BoardRoute])
+export const routeTree = rootRoute.addChildren([IndexRoute, BoardIndexRoute])
 
 /* prettier-ignore-end */
