@@ -25,7 +25,7 @@ function BoardComponent() {
   const [boardItems, setBoardItems] = useState(board.items);
   const [draggingIndex, setDraggingIndex] = useState(-1);
   const [draggingOverIndex, setDraggingOverIndex] = useState(-1);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [editingIndex, setEditingIndex] = useState(-1);
 
   // const isHovered = hoveredId === item?.chainId;
 
@@ -39,16 +39,20 @@ function BoardComponent() {
     [],
   );
 
-  const handleOnDragStart = () => {
-    setDraggingIndex(selectedIndex);
+  const handleOnDragStart = (index: number) => {
+    setDraggingIndex(index);
   };
 
-  const handleOnDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleOnDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number,
+  ) => {
     e.preventDefault();
-    setDraggingOverIndex(selectedIndex);
+    setDraggingOverIndex(index);
   };
 
-  const handleOnDrop = () => {
+  const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
     const swappedArray = swapArrayItems(
       board.items,
       draggingIndex,
@@ -57,35 +61,33 @@ function BoardComponent() {
     setBoardItems(swappedArray);
   };
 
-  const onAddItem = (addedItem: Item) => {
+  const onAddItem = (addedItem: Item, index: number) => {
     if (addedItem) {
       const updatedItems = board.items.map((item, i) => {
-        if (i === selectedIndex) {
+        if (i === index) {
           return addedItem;
         }
         return item;
       });
 
       setBoardItems(updatedItems);
-      setSelectedIndex(-1);
     }
   };
 
-  const onDelete = (itemId: string) => {
+  const onDelete = (itemId: string, index: number) => {
     if (itemId) {
       const emptyItem = {
         itemId: itemId,
       } as Item;
 
       const updatedItems = board.items.map((item, i) => {
-        if (i === selectedIndex) {
+        if (i === index) {
           return emptyItem;
         }
         return item;
       });
 
       setBoardItems(updatedItems);
-      setSelectedIndex(-1);
     }
   };
 
@@ -102,7 +104,6 @@ function BoardComponent() {
           return item;
         }),
       );
-      setSelectedIndex(-1);
     }
   };
 
@@ -114,22 +115,19 @@ function BoardComponent() {
             key={item.itemId}
             className="col-span-1 p-1 even:bg-[#e4dccc] odd:bg-[#cec6af] rounded lg:w-[90px]"
           >
-            <Dialog
-              open={selectedIndex === index}
-              onOpenChange={() => setSelectedIndex(-1)}
-            >
+            <Dialog open={editingIndex === index}>
               <motion.div
                 draggable={!!item?.itemType}
                 layout
                 className={cn(itemClasses)}
                 onDrop={handleOnDrop}
-                onDragStart={() => handleOnDragStart()}
-                onDragOver={(e) => handleOnDragOver(e)}
+                onDragStart={() => handleOnDragStart(index)}
+                onDragOver={(e) => handleOnDragOver(e, index)}
               >
                 <div
                   className="h-full w-full "
                   onClick={() => {
-                    setSelectedIndex(index);
+                    setEditingIndex(index);
                   }}
                 >
                   <BoardItem item={item} />
@@ -141,12 +139,12 @@ function BoardComponent() {
                   {item.itemType ? (
                     <BoardItemEdit
                       item={item}
-                      setDeleteItem={(item) => onDelete(item.itemId)}
+                      setDeleteItem={(item) => onDelete(item.itemId, index)}
                       setOnSaveItem={(item) => onUpdate(item)}
                     />
                   ) : (
                     <BoardItemAdd
-                      setAddedItem={(addedItem) => onAddItem(addedItem)}
+                      setAddedItem={(addedItem) => onAddItem(addedItem, index)}
                     />
                   )}
                 </Card>
