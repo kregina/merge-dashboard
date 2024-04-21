@@ -1,51 +1,48 @@
 import {
   Badge,
   Button,
-  Card,
   CardContent,
-  CardFooter,
   CardHeader,
   Input,
   Label,
   Separator,
 } from '@/components';
 import { Item, ItemVisibility } from '@/services';
-import { Eye, EyeOff, Play, Save, Trash } from 'lucide-react';
+import { Eye, EyeOff, Play, Trash } from 'lucide-react';
 import { FC, useMemo } from 'react';
 import { BoardItemImage } from './BoardItemImage';
-import { useBoardItemEdit } from './useBoardItemEdit';
 
 interface BoardItemEditProps {
   item: Item;
-  setIsModalOpen: (isOpen: boolean) => void;
+  isPausedUntil: string | null;
+  onDelete: () => void;
+  onToggleVisibility: () => void;
+  onChangeLevel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onUnpause: () => void;
 }
 
-export const BoardItemEdit: FC<BoardItemEditProps> = ({
-  item,
-  setIsModalOpen,
-}) => {
+export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
   const {
-    currentItem,
+    item,
     isPausedUntil,
+    onDelete,
     onToggleVisibility,
     onChangeLevel,
     onUnpause,
-    onDelete,
-    mutationUpdate,
-  } = useBoardItemEdit({ item, setIsModalOpen });
+  } = props;
 
   const fieldWrapperClasses = useMemo(
     () => 'flex items-center space-x-2 justify-between mb-4',
-    [currentItem],
+    [item],
   );
 
   return (
-    <Card>
+    <>
       <CardHeader>
         <h1 className="text-lg flex justify-between mb-4">
-          {currentItem?.chainId}
+          {item?.chainId}
           <div>
-            {currentItem?.isInsideBubble && (
+            {item?.isInsideBubble && (
               <Badge className="mr-4 bg-teal-600 dark:bg-teal-300">
                 Inside Bubble
               </Badge>
@@ -62,9 +59,9 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({
       <CardContent className="flex flex-col justify-center">
         <div className="relative self-center">
           <BoardItemImage
-            chainId={currentItem?.chainId}
-            icon={currentItem.icon || ''}
-            isInsideBubble={currentItem?.isInsideBubble}
+            chainId={item?.chainId}
+            icon={item.icon || ''}
+            isInsideBubble={item?.isInsideBubble}
           />
         </div>
         <div>
@@ -73,7 +70,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({
             <Input
               id="level"
               type="number"
-              defaultValue={currentItem?.itemLevel || 1}
+              defaultValue={item?.itemLevel || 1}
               min={1}
               max={50}
               className="w-auto text-center"
@@ -84,11 +81,8 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({
           <div className={fieldWrapperClasses}>
             <p>
               Item is
-              <span className="text-orange-500">
-                {' '}
-                {currentItem?.visibility}
-              </span>{' '}
-              to the player.
+              <span className="text-orange-500"> {item?.visibility}</span> to
+              the player.
             </p>
 
             <Button
@@ -96,7 +90,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({
               className="border"
               onClick={onToggleVisibility}
             >
-              {currentItem?.visibility === ItemVisibility.VISIBLE ? (
+              {item?.visibility === ItemVisibility.VISIBLE ? (
                 <Eye className="mr-2 h-4 w-4" />
               ) : (
                 <EyeOff className="mr-2 h-4 w-4" />
@@ -123,15 +117,6 @@ export const BoardItemEdit: FC<BoardItemEditProps> = ({
         </div>
         <Separator />
       </CardContent>
-
-      <CardFooter className="justify-end">
-        <Button
-          onClick={() => currentItem && mutationUpdate.mutate(currentItem)}
-        >
-          <Save className="mr-4" />
-          Update Item
-        </Button>
-      </CardFooter>
-    </Card>
+    </>
   );
 };

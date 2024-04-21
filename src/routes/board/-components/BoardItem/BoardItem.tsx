@@ -4,9 +4,8 @@ import { Item } from '@/services';
 import { motion } from 'framer-motion';
 import { PlusSquare } from 'lucide-react';
 import { FC, useMemo, useState } from 'react';
-import { BoardItemAdd } from './BoardItemAdd';
 import { BoardItemBadge } from './BoardItemBadge';
-import { BoardItemEdit } from './BoardItemEdit';
+import { BoardItemContent } from './BoardItemContent';
 import { BoardItemImage } from './BoardItemImage';
 import { useBoardItem } from './useBoardItem';
 
@@ -89,11 +88,11 @@ export const BoardItem: FC<BoardItemProps> = ({
         </motion.div>
 
         <DialogContent>
-          {item.itemType ? (
-            <BoardItemEdit item={item} setIsModalOpen={setIsModalOpen} />
-          ) : (
-            <BoardItemAdd index={index} setIsModalOpen={setIsModalOpen} />
-          )}
+          <BoardItemContent
+            item={item}
+            index={index}
+            onAfterSave={() => setIsModalOpen(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>

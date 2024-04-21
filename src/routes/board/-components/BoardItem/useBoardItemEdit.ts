@@ -11,11 +11,12 @@ import { BoardContext } from '../BoardContext';
 
 interface UseBoardItemEditProps {
   item: Item;
-  setIsModalOpen: (isOpen: boolean) => void;
+  onAfterSave: () => void;
+  onBeforeSave: () => void;
 }
 
-export const useBoardItemEdit = (props: UseBoardItemEditProps) => {
-  const { item, setIsModalOpen } = props;
+export const useBoardItemEdit = (params: UseBoardItemEditProps) => {
+  const { item, onAfterSave, onBeforeSave } = params;
   const [currentItem, setCurrentItem] = useState<Item>(item);
 
   const isPausedUntil = currentItem?.pausedUntil
@@ -35,9 +36,12 @@ export const useBoardItemEdit = (props: UseBoardItemEditProps) => {
         updatedItem: updatedItem,
       }),
 
+    onMutate: () => {
+      onBeforeSave();
+    },
     onSuccess: (data) => {
       boardContext.setBoardItems(data);
-      setIsModalOpen(false);
+      onAfterSave();
     },
   });
 
@@ -50,10 +54,12 @@ export const useBoardItemEdit = (props: UseBoardItemEditProps) => {
           (item) => item?.itemId === itemId,
         ),
       }),
-
+    onMutate: () => {
+      onBeforeSave();
+    },
     onSuccess: (data) => {
       boardContext.setBoardItems(data);
-      setIsModalOpen(false);
+      onAfterSave();
     },
   });
 
@@ -93,6 +99,12 @@ export const useBoardItemEdit = (props: UseBoardItemEditProps) => {
     }
   };
 
+  const onUpdate = () => {
+    if (currentItem) {
+      mutationUpdate.mutate(currentItem);
+    }
+  };
+
   return {
     currentItem,
     isPausedUntil,
@@ -100,6 +112,6 @@ export const useBoardItemEdit = (props: UseBoardItemEditProps) => {
     onChangeLevel,
     onUnpause,
     onDelete,
-    mutationUpdate,
+    onUpdate,
   };
 };
