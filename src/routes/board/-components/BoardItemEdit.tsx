@@ -69,11 +69,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
 
       <CardContent className="flex flex-col justify-center">
         <div className="relative self-center">
-          <BoardItemImage
-            chainId={currentItem.chainId}
-            icon={item.icon || ''}
-            isInsideBubble={currentItem.isInsideBubble}
-          />
+          <BoardItemImage item={currentItem} />
         </div>
         <div>
           <div className={fieldWrapperClasses}>

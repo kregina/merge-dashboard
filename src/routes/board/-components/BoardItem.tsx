@@ -11,8 +11,6 @@ interface BoardItemProps {
 }
 
 export const BoardItem: FC<BoardItemProps> = ({ item, onClick }) => {
-  // const isActive = activeChainId === item?.chainId;
-
   return (
     <div className="h-full w-full " onClick={onClick}>
       {item.itemType ? (
@@ -21,11 +19,7 @@ export const BoardItem: FC<BoardItemProps> = ({ item, onClick }) => {
             pausedUntil={item.pausedUntil}
             itemLevel={item.itemLevel}
           />
-          <BoardItemImage
-            icon={item.icon || ''}
-            chainId={item.chainId}
-            isInsideBubble={item.isInsideBubble}
-          />
+          <BoardItemImage item={item} />
         </>
       ) : (
         <div

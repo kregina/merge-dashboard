@@ -1,4 +1,4 @@
-import { Card } from '@/components';
+import { Card, CardContent } from '@/components';
 import { cn } from '@/lib/utils';
 import { Item } from '@/services';
 import { motion } from 'framer-motion';
@@ -21,6 +21,7 @@ export const BoardDragAndDrop: FC<BoardGridProps> = ({
 }) => {
   const [dragSourceIndex, setDragSourceIndex] = useState(-1);
   const [dragTargetIndex, setDragTargetIndex] = useState(-1);
+  const [showInvisibleItems, setShowInvisibleItems] = useState(false);
 
   const gridStyle = useMemo(
     () => ({
@@ -28,18 +29,6 @@ export const BoardDragAndDrop: FC<BoardGridProps> = ({
       gridTemplateRows: `repeat(${height}, minmax(0, 1fr))`,
     }),
     [width, height],
-  );
-
-  // const isHovered = hoveredId === item?.chainId;
-
-  const itemClasses = useMemo(
-    () =>
-      cn(
-        'rounded cursor-grab transition-colors duration-100 ease-in-out relative overflow-hidden h-full',
-        // isActive && 'bg-emerald-600 dark:bg-emerald-800',
-        // isHovered && 'bg-orange-500 dark:bg-orange-700',
-      ),
-    [],
   );
 
   const handleOnDragStart = (index: number) => {
@@ -65,8 +54,8 @@ export const BoardDragAndDrop: FC<BoardGridProps> = ({
 
   return (
     <Card>
-      <div
-        className="w-full h-full grid border-4 border-[#c2a061] bg-[#e4dccc] rounded-xl p-1 gap-1"
+      <CardContent
+        className="max-w-[40rem] grid border-4 border-[#c2a061] bg-[#e4dccc] rounded-xl p-1 gap-1 mt-20 md:mt-0"
         style={gridStyle}
       >
         {items.map((item, index) => (
@@ -77,8 +66,18 @@ export const BoardDragAndDrop: FC<BoardGridProps> = ({
             <motion.div
               draggable={!!item?.itemType}
               layout
-              className={cn(itemClasses)}
+              className={cn(
+                'rounded transition-colors cursor-pointer duration-100 ease-in-out relative overflow-hidden h-full',
+                `${items[dragTargetIndex] === items[index] && 'bg-emerald-500'}`,
+                `${
+                  items[index]?.chainId &&
+                  items[dragSourceIndex]?.chainId === items[index]?.chainId &&
+                  'bg-orange-500'
+                }`,
+              )}
               onDrop={handleOnDrop}
+              onMouseOver={() => handleOnDragStart(index)}
+              onMouseLeave={() => setDragSourceIndex(-1)}
               onDragStart={() => handleOnDragStart(index)}
               onDragOver={(e) => handleOnDragOver(e, index)}
             >
@@ -86,7 +85,7 @@ export const BoardDragAndDrop: FC<BoardGridProps> = ({
             </motion.div>
           </div>
         ))}
-      </div>
+      </CardContent>
     </Card>
   );
 };

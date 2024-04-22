@@ -1,6 +1,13 @@
-import { Dialog, DialogContent } from '@/components';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogContent,
+} from '@/components';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import { Lightbulb } from 'lucide-react';
 import { BoardDragAndDrop } from './-components/BoardDragAndDrop';
 import { BoardItem } from './-components/BoardItem';
 import { BoardItemAdd } from './-components/BoardItemAdd';
@@ -29,7 +36,26 @@ function BoardComponent() {
   } = useBoard({ board });
 
   return (
-    <div className="m-auto">
+    <div className="grid md:grid-cols-[auto_1fr] md:gap-20">
+      <div className="px-4 md:pt-20 hidden md:block">
+        <Card className="rounded-md border-1 bg-background shadow-md">
+          <CardHeader className="flex-row items-center gap-4">
+            <Lightbulb
+              size={42}
+              className="shadow-sm rounded-full bg-muted/30 p-2 text-orange-500"
+            />
+            Tips:
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc list-inside">
+              <li>Click on an item to edit it.</li>
+              <li>Click on the "+" button to add a new item.</li>
+              <li>Drag and drop items to reorder them.</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
       <BoardDragAndDrop
         height={board.height}
         width={board.width}
