@@ -17,6 +17,7 @@ import { useBoard } from './-components/useBoard';
 
 export const Route = createFileRoute('/')({
   loader: ({ context }) =>
+    //@ts-expect-error - ensureQueryData is not typed
     context.queryClient.ensureQueryData(getBoardQueryOptions),
   component: BoardComponent,
 });
