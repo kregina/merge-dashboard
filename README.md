@@ -2,6 +2,8 @@
 
 An application displaying the game board that players interact with while playing a merge-style game.
 
+<img src="./merge-dashboard.gif" width="500" />
+
 ## Technologies
 
 This project is built using a robust stack of modern technologies to ensure high performance, scalability, and developer-friendly experience:
