@@ -22,6 +22,7 @@ const router = createRouter({
   },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
+  basepath: '/merge-dashboard',
 });
 
 // Register the router instance for type safety

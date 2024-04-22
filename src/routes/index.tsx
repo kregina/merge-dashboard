@@ -38,7 +38,7 @@ function BoardComponent() {
 
   return (
     <div className="grid md:grid-cols-[auto_1fr] md:gap-20">
-      <div className="px-4 md:pt-20 hidden md:block">
+      <div className="px-4 md:pt-20 hidden lg:block">
         <Card className="rounded-md border-1 bg-background shadow-md">
           <CardHeader className="flex-row items-center gap-4">
             <Lightbulb
