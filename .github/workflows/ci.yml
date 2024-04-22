@@ -55,7 +55,7 @@ jobs:
       - run: yarn
 
       - name: Build
-        run: yarn run build
+        run: yarn build
 
   deploy:
     needs: [test, build]
