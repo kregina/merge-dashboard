@@ -27,7 +27,7 @@ export const Header = () => {
               <span className="sr-only">Merge Dashboard</span>
             </a>
             <Link
-              to="/board"
+              to="/"
               className="flex items-center rounded-lg [&.active]:bg-accent gap-4 p-2.5 text-muted-foreground hover:text-foreground"
             >
               <Grid3X3 className="h-5 w-5" />

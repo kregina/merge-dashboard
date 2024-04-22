@@ -16,7 +16,7 @@ export const SideNav = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              to="/board"
+              to="/"
               className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 [&.active]:bg-accent"
             >
               <Grid3X3 className="h-5 w-5" />

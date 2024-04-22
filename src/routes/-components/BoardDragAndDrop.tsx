@@ -21,7 +21,6 @@ export const BoardDragAndDrop: FC<BoardGridProps> = ({
 }) => {
   const [dragSourceIndex, setDragSourceIndex] = useState(-1);
   const [dragTargetIndex, setDragTargetIndex] = useState(-1);
-  const [showInvisibleItems, setShowInvisibleItems] = useState(false);
 
   const gridStyle = useMemo(
     () => ({
