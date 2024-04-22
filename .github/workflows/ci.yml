@@ -18,10 +18,10 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - run: npm install
+      - run: yarn
 
       - name: Check types
-        run: npm run typecheck && npm run lint
+        run: yarn lint
 
   test:
     name: Test
