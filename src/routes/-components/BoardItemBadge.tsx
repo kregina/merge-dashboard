@@ -1,31 +1,37 @@
 import { Badge, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { Item, ItemVisibility } from '@/services';
 import { format } from 'date-fns';
-import { Timer } from 'lucide-react';
+import { Eye, EyeOff, Timer } from 'lucide-react';
 import { FC } from 'react';
 
 interface BoardItemBadgeProps {
-  pausedUntil: string | null;
-  itemLevel?: number | null;
+  item: Item;
 }
 
-export const BoardItemBadge: FC<BoardItemBadgeProps> = ({
-  pausedUntil,
-  itemLevel,
-}) => {
-  const isPausedUntil = pausedUntil !== null ? new Date(pausedUntil) : null;
+export const BoardItemBadge: FC<BoardItemBadgeProps> = ({ item }) => {
+  const isPausedUntil =
+    item?.pausedUntil !== null ? new Date(item?.pausedUntil) : null;
 
   return (
-    <div className="flex flex-col absolute right-0 gap-2">
-      {itemLevel && (
+    <div className="flex flex-col items-center absolute right-0">
+      {item?.itemLevel && (
         <Tooltip>
           <TooltipTrigger>
             <Badge className="bg-teal-300 size-5 p-0 justify-center text-zinc-800">
-              {itemLevel}
+              {item?.itemLevel}
             </Badge>
           </TooltipTrigger>
-          <TooltipContent>Level {itemLevel}</TooltipContent>
+          <TooltipContent>Level {item?.itemLevel}</TooltipContent>
         </Tooltip>
       )}
+      <Tooltip>
+        <TooltipTrigger>
+          <Badge className="bg-orange-500 size-5 p-0 justify-center text-zinc-800">
+            {item.visibility === ItemVisibility.HIDDEN ? <EyeOff /> : <Eye />}
+          </Badge>
+        </TooltipTrigger>
+        <TooltipContent>{item.visibility} to the player</TooltipContent>
+      </Tooltip>
       {isPausedUntil && (
         <Tooltip>
           <TooltipTrigger>

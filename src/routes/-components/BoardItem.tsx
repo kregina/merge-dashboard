@@ -15,10 +15,7 @@ export const BoardItem: FC<BoardItemProps> = ({ item, onClick }) => {
     <div className="h-full w-full " onClick={onClick}>
       {item.itemType ? (
         <>
-          <BoardItemBadge
-            pausedUntil={item.pausedUntil}
-            itemLevel={item.itemLevel}
-          />
+          <BoardItemBadge item={item} />
           <BoardItemImage item={item} />
         </>
       ) : (
