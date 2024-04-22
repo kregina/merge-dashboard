@@ -8,11 +8,15 @@ An application displaying the game board that players interact with while playin
 
 This project is built using a robust stack of modern technologies to ensure high performance, scalability, and developer-friendly experience:
 
-- **Vite**
-- **React**
-- **TypeScript**
-- **Tailwind**
-- **Shadcn UI**
+- [**Vite**](https://vitejs.dev/)
+- [**React**](https://react.dev/)
+- [**TypeScript**](https://www.typescriptlang.org/)
+- [**Vitest**](https://vitest.dev/)
+- [**Tailwind**](https://tailwindcss.com/)
+- [**Shadcn UI**](https://ui.shadcn.com/)
+- [**Motion Framer**](https://www.framer.com/)
+- [**Tanstack/Router** (file based)](https://tanstack.com/router/latest)
+- [**Tanstack/Query**](https://tanstack.com/query/latest)
 
 ## Prerequisites
 
