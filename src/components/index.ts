@@ -1,5 +1,5 @@
-export { Header } from './layout/header';
-export { SideNav } from './layout/side-nav';
+export * from './layout/header';
+export * from './layout/side-nav';
 export * from './theme-provider';
 export * from './ui/badge';
 export * from './ui/button';
