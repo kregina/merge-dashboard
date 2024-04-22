@@ -16,7 +16,7 @@ import { getBoardQueryOptions } from './-components/boardQueryOptions';
 import { useBoard } from './-components/useBoard';
 
 export const Route = createFileRoute('/')({
-  loader: ({ context }: { context: any }) =>
+  loader: ({ context }) =>
     context.queryClient.ensureQueryData(getBoardQueryOptions),
   component: BoardComponent,
 });

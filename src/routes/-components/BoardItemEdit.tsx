@@ -12,7 +12,7 @@ import {
 import { Item, ItemVisibility } from '@/services';
 import { format } from 'date-fns';
 import { Eye, EyeOff, Play, Save, Trash } from 'lucide-react';
-import { FC, useMemo, useState } from 'react';
+import { FC, useState } from 'react';
 import { BoardItemImage } from './BoardItemImage';
 
 interface BoardItemEditProps {
@@ -30,10 +30,8 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
     ? format(new Date(currentItem.pausedUntil), 'MM/dd/yyyy hh:mm a')
     : null;
 
-  const fieldWrapperClasses = useMemo(
-    () => 'flex items-center space-x-2 justify-between mb-4',
-    [item],
-  );
+  const fieldWrapperClasses =
+    'flex items-center space-x-2 justify-between mb-4';
 
   const handleUpdateItem = (updatedItemProps: Partial<Item>) => {
     setCurrentItem({ ...currentItem, ...updatedItemProps });
@@ -72,7 +70,7 @@ export const BoardItemEdit: FC<BoardItemEditProps> = (props) => {
           <BoardItemImage item={currentItem} />
         </div>
         <div>
-          <div className={fieldWrapperClasses}>
+          <div className="flex items-center space-x-2 justify-between mb-4">
             <Label htmlFor="level">Level:</Label>
             <Input
               id="level"
