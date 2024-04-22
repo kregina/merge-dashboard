@@ -2,7 +2,7 @@
 
 An application displaying the game board that players interact with while playing a merge-style game.
 
-<img src="./merge-dashboard.gif" width="500" />
+<img src="./merge-dashboard.gif" width="1000" />
 
 ## Technologies
 
